@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autenticação - Supabase</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, sans-serif;
+    background: #f5f4fb;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .auth-box {
+    background: #fff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.1);
+    width: 100%;
+    max-width: 380px;
+  }
+  h1 {
+    font-size: 22px;
+    margin-bottom: 24px;
+    text-align: center;
+    color: #222;
+  }
+  .form-group {
+    margin-bottom: 16px;
+  }
+  label {
+    display: block;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 6px;
+  }
+  input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+  }
+  input:focus { border-color: #5f4498; }
+  .btn-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity .2s;
+  }
+  button:hover { opacity: .85; }
+  #btn-register { background: #5f4498; color: #fff; }
+  #btn-login { background: #ffcd05; color: #000; }
+  #btn-logout { background: #eee; color: #333; }
+  #btn-getuser { background: #fff; color: #5f4498; border: 1px solid #5f4498; }
+  #status {
+    margin-top: 18px;
+    font-size: 13px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #f5f4fb;
+    color: #444;
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-height: 20px;
+  }
+  #status.error { background: #fdeaea; color: #c0392b; }
+  #status.success { background: #e8f8ef; color: #1e8449; }
+</style>
+</head>
+<body>
+
+<div class="auth-box">
+  <h1>Acesse sua conta</h1>
+
+  <div class="form-group">
+    <label for="email">E-mail</label>
+    <input type="email" id="email" placeholder="seu@email.com" />
+  </div>
+
+  <div class="form-group">
+    <label for="password">Senha</label>
+    <input type="password" id="password" placeholder="••••••••" />
+  </div>
+
+  <div class="btn-row">
+    <button id="btn-register">Criar Conta</button>
+    <button id="btn-login">Login</button>
+    <button id="btn-getuser">Ver Usuário</button>
+    <button id="btn-logout">Logout</button>
+  </div>
+
+  <div id="status"></div>
+</div>
+
+<script type="module" src="./auth.js"></script>
+</body>
+</html>

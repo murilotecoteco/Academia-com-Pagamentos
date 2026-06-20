@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagamento Aprovado</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    padding: 48px 36px;
+    text-align: center;
+    max-width: 420px;
+    width: 100%;
+  }
+  .icon {
+    width: 80px;
+    height: 80px;
+    background: #22c55e;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    animation: pop 0.4s ease-out;
+  }
+  .icon svg { width: 40px; height: 40px; stroke: #fff; }
+  @keyframes pop {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  h1 { color: #166534; font-size: 24px; margin-bottom: 12px; }
+  p { color: #4b5563; font-size: 16px; line-height: 1.5; margin-bottom: 28px; }
+  .btn {
+    display: inline-block;
+    background: #16a34a;
+    color: #fff;
+    text-decoration: none;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: background 0.2s;
+  }
+  .btn:hover { background: #15803d; }
+  .order-id {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #9ca3af;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 13l4 4L19 7"></path>
+      </svg>
+    </div>
+    <h1>Pagamento aprovado!</h1>
+    <p>Recebemos sua confirmação do Stripe. Em breve você receberá um e-mail com os detalhes da sua compra.</p>
+    <a href="/" class="btn">Voltar para o site</a>
+    <div class="order-id" id="sessionInfo"></div>
+  </div>
+
+  <script>
+    // Captura o session_id que o Stripe envia na URL de sucesso
+    // Configure no Checkout: success_url: "https://seusite.com/sucesso.html?session_id={CHECKOUT_SESSION_ID}"
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    if (sessionId) {
+      document.getElementById('sessionInfo').textContent = 'ID da sessão: ' + sessionId;
+    }
+  </script>
+</body>
+</html>

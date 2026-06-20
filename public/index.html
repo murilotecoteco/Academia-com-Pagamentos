@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academia Toledo – PR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+<script src="script.js"></script>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <a href="tel:+5544998381478">
+      <svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.25 1.01l-2.2 2.22z"/></svg>
+      <span>(44) 99838-1478</span>
+    </a>
+    <a href="mailto:contato@academiatoledobr.com.br">
+      <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      <span>contato@academiatoledobr.com.br</span>
+    </a>
+  </div>
+  <div class="top-bar-right">
+    <span class="tb-label">Siga-nos</span>
+    <a href="https://instagram.com" class="social-icon" target="_blank" aria-label="Instagram">
+      <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+    </a>
+    <a href="https://facebook.com" class="social-icon" target="_blank" aria-label="Facebook">
+      <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    </a>
+    <a href="https://youtube.com" class="social-icon" target="_blank" aria-label="YouTube">
+      <svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+    </a>
+    <a href="https://tiktok.com" class="social-icon" target="_blank" aria-label="TikTok">
+      <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="site-header" id="siteHeader">
+  <a href="#" class="header-logo">
+    <div class="header-logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29l-1.43-1.43z"/></svg>
+    </div>
+    ACADEMIA <span>TOLEDO</span>
+  </a>
+  <nav>
+    <ul class="nav-menu" id="navMenu">
+      <li class="active"><a href="#">HOME</a></li>
+      <li><a href="#aulas">AULAS</a></li>
+      <li><a href="#planos">PROGRAMAS</a></li>
+      <li><a href="#unidades">UNIDADES</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#contato">CONTATO</a></li>
+      <li><a href="login.html" class="nav-login-link">LOGIN</a></li>
+    </ul>
+  </nav>
+  <div class="header-actions">
+    <a href="login.html" class="header-login-btn">
+      <svg viewBox="0 0 24 24"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
+      LOGIN
+    </a>
+    <a href="http://wa.me/5544998381478?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20minha%20aula%20experimental%20gr%C3%A1tis." class="header-cta" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      FALE CONOSCO
+    </a>
+  </div>
+  <button class="mobile-toggle" onclick="toggleMenu()">☰</button>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-overlay2"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-social">
+    <a href="https://instagram.com" target="_blank" title="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+    <a href="https://facebook.com" target="_blank" title="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+    <a href="https://youtube.com" target="_blank" title="YouTube"><svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg></a>
+    <a href="https://tiktok.com" target="_blank" title="TikTok"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
+  </div>
+
+  <div class="hero-content">
+    <span class="hero-trial-badge">🎁 Aula experimental 100% grátis</span>
+    <p class="hero-eyebrow">Transforme seu corpo e sua mente</p>
+    <h1 class="hero-title">SEU MELHOR<br>PLANO DE <em>SAÚDE</em><br><span class="outline">ESTÁ AQUI</span></h1>
+    <p class="hero-desc">Descubra por que somos a academia mais completa de Toledo. Estrutura de ponta, equipe especializada e planos para todos os perfis.</p>
+    <div class="hero-actions">
+      <a href="http://wa.me/5544998381478?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20minha%20aula%20experimental%20gr%C3%A1tis." class="btn-primary" target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        AULA EXPERIMENTAL GRÁTIS
+      </a>
+      <a href="#planos" class="btn-ghost">CONHECER PLANOS →</a>
+    </div>
+  </div>
+
+  <div class="hero-badges">
+    <div class="hero-badge"><strong>+5k</strong><span>Alunos Ativos</span></div>
+    <div class="hero-badge"><strong>1500m²</strong><span>De Estrutura</span></div>
+    <div class="hero-badge"><strong>5</strong><span>Studios</span></div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item"><span class="stat-number" data-target="5000">0</span><span class="stat-label">Alunos Ativos</span></div>
+  <div class="stat-item"><span class="stat-number">1500m²</span><span class="stat-label">De Estrutura</span></div>
+  <div class="stat-item"><span class="stat-number" data-target="5">0</span><span class="stat-label">Studios</span></div>
+  <div class="stat-item"><span class="stat-number" data-target="10">0</span><span class="stat-label">Anos de Mercado</span></div>
+</div>
+
+<!-- AULA EXPERIMENTAL GRÁTIS -->
+<section class="trial-banner reveal" id="trial">
+  <div class="trial-inner">
+    <span class="trial-pill">Oferta para novos alunos</span>
+    <h2 class="section-title-lg">SUA AULA EXPERIMENTAL É <em>100% GRÁTIS</em></h2>
+    <p>Venha conhecer nossa estrutura, treinar com nossa equipe e sentir na prática por que somos a academia mais completa de Toledo. Sem compromisso e sem pegadinha.</p>
+    <a href="http://wa.me/5544998381478?text=Ol%C3%A1!%20Quero%20agendar%20minha%20aula%20experimental%20gr%C3%A1tis." class="btn-primary" target="_blank">QUERO MINHA AULA GRÁTIS</a>
+  </div>
+</section>
+
+<!-- STUDIOS CAROUSEL -->
+<section class="studios-section" id="aulas">
+  <div class="studios-header">
+    <div class="section-tag">Nossos Espaços</div>
+    <h2 class="section-title-lg reveal">5 STUDIOS ESPECIALIZADOS<br>PARA SUA <span>EVOLUÇÃO</span> COMPLETA</h2>
+    <p class="section-desc reveal">Cada ambiente foi projetado para potencializar seus resultados com equipamentos de última geração.</p>
+  </div>
+  <div class="carousel-wrap">
+    <div class="carousel-track" id="carousel">
+      <div class="carousel-slide">
+        <span class="slide-pill">Studio 01</span>
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" alt="Musculação" />
+        <div class="slide-overlay"></div>
+        <div class="slide-label">Musculação<small>Equipamentos de última geração</small></div>
+      </div>
+      <div class="carousel-slide">
+        <span class="slide-pill">Studio 02</span>
+        <img src="https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?w=700&q=80" alt="Studio Bike" />
+        <div class="slide-overlay"></div>
+        <div class="slide-label">Studio Bike<small>Aulas coletivas e animadas</small></div>
+      </div>
+      <div class="carousel-slide">
+        <span class="slide-pill">Studio 03</span>
+        <img src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=700&q=80" alt="Pilates" />
+        <div class="slide-overlay"></div>
+        <div class="slide-label">Studio Pilates<small>Equilíbrio e força corporal</small></div>
+      </div>
+      <div class="carousel-slide">
+        <span class="slide-pill">Studio 04</span>
+        <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=700&q=80" alt="Yoga" />
+        <div class="slide-overlay"></div>
+        <div class="slide-label">Yoga<small>Mente e corpo em harmonia</small></div>
+      </div>
+      <div class="carousel-slide">
+        <span class="slide-pill">Studio 05</span>
+        <img src="https://images.unsplash.com/photo-1570829460005-c840387bb1ca?w=700&q=80" alt="Spa" />
+        <div class="slide-overlay"></div>
+        <div class="slide-label">Spa &amp; Relaxamento<small>Recuperação e bem-estar</small></div>
+      </div>
+    </div>
+    <button class="carousel-btn prev" onclick="moveCarousel(-1)">&#8249;</button>
+    <button class="carousel-btn next" onclick="moveCarousel(1)">&#8250;</button>
+    <div class="carousel-dots" id="carouselDots"></div>
+  </div>
+</section>
+
+<!-- STRUCTURE + GALLERY -->
+<section class="structure-section">
+  <div class="structure-header reveal">
+    <div class="section-tag">Nossa Estrutura</div>
+    <h2 class="section-title-lg">CONHEÇA NOSSA ESTRUTURA<br>COM MAIS DE <em style="color:var(--yellow);">1500M²</em></h2>
+    <p class="section-desc">Cada metro quadrado foi pensado para maximizar seus resultados</p>
+  </div>
+  <div class="video-container reveal" onclick="openMainVideo(this)">
+    <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&q=80" alt="Tour academia" />
+    <div class="play-circle"></div>
+  </div>
+  <div class="gallery-grid reveal">
+    <div class="gallery-item"><img src="https://media.istockphoto.com/id/1501067984/pt/foto/body-building-center-with-exercise-machines-integrated-inside-a-penthouse-recreation-area.jpg?s=612x612&w=0&k=20&c=Mn5s8ybz5sWgqqoECFDzwRTR5W9baFFrFdopE_HjkqM=" alt="Sala musculação" /></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=500&q=80" alt="Treino funcional" /></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1593079831268-3381b0db4a77?w=500&q=80" alt="Área cardio" /></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=500&q=80" alt="Halteres" /></div>
+    <div class="gallery-item"><img src="https://media.istockphoto.com/id/1391410249/pt/foto/sports-and-gym-activities.jpg?s=612x612&w=0&k=20&c=697XD2Py3wSSjAziZ1Rtkz0AKJDxC88U1y7mQWqK0TI=" alt="Equipamentos" /></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=500&q=80" alt="Academia geral" /></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80" alt="Treino" /></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80" alt="Corredor" /></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=500&q=80" alt="Esteira" /></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1578762560042-46ad127c95ea?w=500&q=80" alt="Pesos" /></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=500&q=80" alt="Levantamento" /></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1596357395217-80de13130e92?w=500&q=80" alt="Spinning" /></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div class="testimonials-header">
+    <div class="section-tag reveal">Depoimentos</div>
+    <h2 class="section-title-lg reveal">INSPIRANDO VIDAS E<br><span>MUDANDO HISTÓRIAS</span></h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"Sempre tive receio de começar na academia, mas aqui me senti acolhido desde o primeiro dia. Os professores explicaram cada exercício e montaram um treino no meu ritmo. Hoje já me sinto muito mais disposto e motivado."</p>
+      <div class="testimonial-bio">
+        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80" alt="João Martins" />
+        <div><strong>João Martins</strong><span>Aluno há 8 meses</span></div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"O que mais me surpreendeu foi a estrutura: são muitos espaços diferentes, equipamentos modernos e tudo muito organizado. Em poucos meses já senti diferença no corpo e na energia diária."</p>
+      <div class="testimonial-bio">
+        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80" alt="Marisa Linhares" />
+        <div><strong>Marisa Linhares</strong><span>Aluna há 1 ano</span></div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"Já passei por outras academias, mas aqui realmente encontrei acompanhamento de verdade. A equipe acompanha minha evolução e ajusta meu treino quando necessário. É outro nível de experiência!"</p>
+      <div class="testimonial-bio">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="Lucas Ferreira" />
+        <div><strong>Lucas Ferreira</strong><span>Aluno há 6 meses</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="plans-section" id="planos">
+  <div class="plans-header">
+    <div class="section-tag">Planos & Preços</div>
+    <h2 class="section-title-lg reveal">ESCOLHA O PLANO PERFEITO<br>PARA SEUS <em style="color:var(--yellow);">OBJETIVOS</em></h2>
+    <a href="#plansGrid" class="btn-primary reveal" style="margin-top:28px;">ASSINAR PLANO</a>
+  </div>
+
+  <div class="plans-grid" id="plansGrid">
+
+    <div class="plan-card reveal">
+      <div class="plan-name">Mensal</div>
+      <div class="plan-price">
+        <span class="from">a partir de</span>
+        <div class="value"><span>R$</span>99</div>
+        <span class="per">por mês</span>
+      </div>
+      <p class="plan-desc">Ideal para quem quer começar sem compromisso de longo prazo.</p>
+      <ul class="plan-features">
+        <li>Musculação com orientação</li>
+        <li>Área de cardio completa</li>
+        <li>Avaliação física inicial</li>
+        <li>Ambiente climatizado</li>
+      </ul>
+      <a href="https://buy.stripe.com/test_5kQdRa6y14x434FbqgaMU00" target="_blank" class="btn-plan">
+        ASSINAR MENSAL
+      </a>
+    </div>
+
+    <div class="plan-card reveal">
+      <div class="plan-name">Trimestral</div>
+      <div class="plan-price">
+        <span class="from">a partir de</span>
+        <div class="value"><span>R$</span>89</div>
+        <span class="per">por mês · 3 meses</span>
+      </div>
+      <p class="plan-desc">3 meses de treino com mais economia e consistência nos resultados.</p>
+      <ul class="plan-features">
+        <li>Musculação com orientação</li>
+        <li>Área de cardio completa</li>
+        <li>Avaliação física inicial</li>
+        <li>Ambiente climatizado</li>
+        <li>Desconto em relação ao mensal</li>
+      </ul>
+      <a href="https://buy.stripe.com/test_fZu14o9Kd0gOeNnamcaMU01" target="_blank" class="btn-plan">
+        ASSINAR TRIMESTRAL
+      </a>
+    </div>
+
+    <div class="plan-card featured reveal">
+      <div class="plan-badge">MAIS POPULAR</div>
+      <div class="plan-name">Semestral</div>
+      <div class="plan-price">
+        <span class="from">a partir de</span>
+        <div class="value"><span>R$</span>79</div>
+        <span class="per">por mês · 6 meses</span>
+      </div>
+      <p class="plan-desc">Nosso plano mais popular. Treine por 6 meses com excelente custo-benefício, acompanhamento profissional e acesso completo à academia.</p>
+      <ul class="plan-features">
+        <li>Musculação com orientação</li>
+        <li>Área de cardio completa</li>
+        <li>Avaliação física inicial</li>
+        <li>Ambiente climatizado</li>
+        <li>Maior desconto por mês</li>
+        <li>Acompanhamento de evolução</li>
+      </ul>
+      <a href="https://buy.stripe.com/test_4gM3cwbSlbZw20B2TKaMU02" target="_blank" class="btn-plan">
+        ASSINAR SEMESTRAL
+      </a>
+    </div>
+
+    <div class="plan-card reveal">
+      <div class="plan-name">Anual</div>
+      <div class="plan-price">
+        <span class="from">a partir de</span>
+        <div class="value"><span>R$</span>69</div>
+        <span class="per">por mês · 12 meses</span>
+      </div>
+      <p class="plan-desc">O melhor custo-benefício para quem está comprometido com a transformação e resultados de longo prazo.</p>
+      <ul class="plan-features">
+        <li>Musculação com orientação</li>
+        <li>Área de cardio completa</li>
+        <li>Avaliação física completa</li>
+        <li>Ambiente climatizado</li>
+        <li>Máximo desconto</li>
+        <li>Acompanhamento contínuo</li>
+      </ul>
+      <a href="https://buy.stripe.com/test_fZubJ23lPgfMgVvdyoaMU03" target="_blank" class="btn-plan">
+        ASSINAR ANUAL
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- APP FEATURES -->
+<section class="app-section">
+  <div class="app-header">
+    <div class="section-tag reveal">Diferenciais</div>
+    <h2 class="section-title-lg reveal">TUDO QUE VOCÊ PRECISA<br>PARA <span>EVOLUIR</span></h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-pill reveal"><div class="feat-icon">📅</div>Treine de Segunda a Sábado</div>
+    <div class="feature-pill reveal"><div class="feat-icon">⚡</div>Agendamento fácil e rápido</div>
+    <div class="feature-pill reveal"><div class="feat-icon">🎯</div>Treinos personalizados para seus objetivos</div>
+    <div class="feature-pill reveal"><div class="feat-icon">📊</div>Acompanhamento de evolução</div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="faq-header">
+    <div class="section-tag reveal" style="justify-content:center;">Dúvidas Frequentes</div>
+    <h2 class="section-title-lg reveal">PERGUNTAS QUE TODO MUNDO<br>FAZ ANTES DE <span>COMEÇAR</span></h2>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item reveal">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Preciso ter experiência para começar a treinar?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer"><p>Não! Nossa equipe é especializada em iniciantes e vai te acompanhar em cada exercício, ajustando o treino ao seu ritmo até você ganhar confiança e autonomia.</p></div>
+    </div>
+    <div class="faq-item reveal">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Como funciona a aula experimental grátis?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer"><p>É simples: você agenda pelo WhatsApp, escolhe o melhor horário e vem conhecer nossa estrutura, equipamentos e equipe sem nenhum compromisso.</p></div>
+    </div>
+    <div class="faq-item reveal">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Quais são os horários de funcionamento?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer"><p>Funcionamos de segunda a sexta das 05h às 24h, sábado das 08h às 18h e domingo das 08h às 12h.</p></div>
+    </div>
+    <div class="faq-item reveal">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Posso treinar mesmo com pouco tempo disponível?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer"><p>Sim! Montamos treinos personalizados que cabem na sua rotina, sejam sessões rápidas e intensas ou treinos mais longos, conforme sua disponibilidade.</p></div>
+    </div>
+    <div class="faq-item reveal">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Quais modalidades estão incluídas no plano?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer"><p>Todos os planos dão acesso à musculação, área de cardio e avaliação física inicial. Aulas como Pilates, Yoga e Studio Bike podem variar conforme o plano — fale com nossa equipe para saber mais.</p></div>
+    </div>
+    <div class="faq-item reveal">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Como faço para assinar um plano ou tirar dúvidas?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer"><p>Você pode assinar diretamente pelo botão de cada plano (pagamento seguro via Stripe) ou falar com nossa equipe pelo WhatsApp para tirar dúvidas antes de assinar.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team-section">
+  <div class="team-inner">
+    <div class="team-text reveal">
+      <div class="section-tag">Nossa Equipe</div>
+      <h2 class="section-title-lg">DO ZERO AO AVANÇADO:<br>NOSSA <span>EQUIPE</span> TE ENSINA!</h2>
+      <p class="team-subtitle">Nunca pisou em uma academia? Sem problema!</p>
+      <p>Nossa equipe de profissionais especializados está preparada para te guiar desde o primeiro dia. Não importa se você é iniciante ou avançado — criamos um plano personalizado que respeita seu ritmo e acelera seus resultados.</p>
+      <div class="team-cta">
+        <a href="http://wa.me/5544998381478?text=Ol%C3%A1!%20Quero%20falar%20com%20a%20equipe%20da%20Academia%20Toledo." class="btn-primary" target="_blank">FALAR COM A EQUIPE</a>
+      </div>
+    </div>
+    <div class="team-img reveal">
+      <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80" alt="Equipe Academia" />
+    </div>
+  </div>
+</section>
+
+<!-- UNITS -->
+<section class="units-section" id="unidades">
+  <div class="units-title">
+    <div class="section-tag reveal" style="justify-content:center;">Nossa Unidade</div>
+    <h2 class="section-title-lg reveal">Atendimento <span>exclusivo</span><br>em nossa unidade</h2>
+  </div>
+  <div class="units-grid" style="grid-template-columns:1fr;max-width:540px;">
+    <div class="unit-card reveal">
+      <div class="unit-thumb">
+        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=700&q=80" alt="" />
+        <div class="unit-thumb-overlay"><div class="play-sm"></div></div>
+      </div>
+      <div class="unit-body">
+        <div class="unit-name">Academia Central</div>
+        <div class="unit-address">Rua Principal, 100 – Centro, Toledo – PR</div>
+        <div class="unit-hours"><strong>Horários:</strong><br>Seg–Sex: 05h às 24h &nbsp;|&nbsp; Sáb: 08h às 18h &nbsp;|&nbsp; Dom: 08h às 12h</div>
+        <div class="unit-map">
+          <iframe src="https://maps.google.com/maps?q=Toledo+PR&t=m&z=14&output=embed&iwloc=near" loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <div class="cta-band-bg"></div>
+  <div class="cta-band-inner">
+    <h2 class="section-title-lg">AGENDE SUA <em>AULA EXPERIMENTAL GRÁTIS</em></h2>
+    <br>
+    <a href="http://wa.me/5544998381478?text=Ol%C3%A1!%20Quero%20agendar%20minha%20aula%20experimental%20gr%C3%A1tis." class="btn-primary" style="background:#fff;color:var(--purple);display:inline-flex;" target="_blank">AGENDAR AULA GRÁTIS →</a>
+  </div>
+</div>
+
+<!-- SOCIAL MEDIA -->
+<section class="social-section">
+  <div class="social-header">
+    <div class="section-tag reveal" style="justify-content:center;color:var(--yellow);">
+      <span style="display:inline-flex;align-items:center;gap:10px;"><span style="width:28px;height:2px;background:var(--yellow);display:block;"></span>Redes Sociais</span>
+    </div>
+    <h2 class="section-title-lg reveal">SIGA NOSSA <span style="color:var(--yellow);">JORNADA</span><br>NAS REDES</h2>
+    <p class="section-desc reveal">Conteúdo exclusivo, dicas de treino e inspiração diária</p>
+  </div>
+  <div class="social-cards">
+    <a href="https://instagram.com" class="social-card instagram reveal" target="_blank">
+      <div class="social-card-icon"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div>
+      <div class="social-card-name">Instagram</div>
+      <div class="social-card-handle">@academiatoledobr</div>
+      <div class="social-card-followers">2.4k<small>Seguidores</small></div>
+    </a>
+    <a href="https://facebook.com" class="social-card facebook reveal" target="_blank">
+      <div class="social-card-icon"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
+      <div class="social-card-name">Facebook</div>
+      <div class="social-card-handle">/academiatoledobr</div>
+      <div class="social-card-followers">1.8k<small>Curtidas</small></div>
+    </a>
+    <a href="https://youtube.com" class="social-card youtube reveal" target="_blank">
+      <div class="social-card-icon"><svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg></div>
+      <div class="social-card-name">YouTube</div>
+      <div class="social-card-handle">Academia Toledo</div>
+      <div class="social-card-followers">320<small>Inscritos</small></div>
+    </a>
+    <a href="https://tiktok.com" class="social-card tiktok reveal" target="_blank">
+      <div class="social-card-icon"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></div>
+      <div class="social-card-name">TikTok</div>
+      <div class="social-card-handle">@academiatoledobr</div>
+      <div class="social-card-followers">950<small>Seguidores</small></div>
+    </a>
+    <a href="http://wa.me/5544998381478" class="social-card whatsapp reveal" target="_blank">
+      <div class="social-card-icon"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+      <div class="social-card-name">WhatsApp</div>
+      <div class="social-card-handle">(44) 99838-1478</div>
+      <div class="social-card-followers">Chat<small>Fale conosco agora</small></div>
+    </a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contato">
+  <div class="contact-inner">
+    <div class="contact-left reveal">
+      <div class="section-tag">Contato</div>
+      <h2 class="section-title-lg">Converse com nossa equipe <span>especializada</span></h2>
+      <p>Tire suas dúvidas, conheça nossos planos ou agende uma visita. Estamos prontos para te receber!</p>
+      <ul class="contact-info-list">
+        <li>
+          <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.25 1.01l-2.2 2.22z"/></svg></div>
+          <div><strong>Telefone / WhatsApp</strong>(44) 99838-1478</div>
+        </li>
+        <li>
+          <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+          <div><strong>E-mail</strong>contato@academiatoledobr.com.br</div>
+        </li>
+        <li>
+          <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg></div>
+          <div><strong>Endereço</strong>Rua Principal, 100 – Centro, Toledo – PR</div>
+        </li>
+        <li>
+          <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm.5 5v5.25l4.5 2.67-.75 1.23L11 13V7h1.5z"/></svg></div>
+          <div><strong>Horários</strong>Seg–Sex: 05h–24h &nbsp;|&nbsp; Sáb: 08h–18h &nbsp;|&nbsp; Dom: 08h–12h</div>
+        </li>
+      </ul>
+      <div class="contact-social-row">
+        <a href="https://instagram.com" class="contact-soc" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+        <a href="https://facebook.com" class="contact-soc" target="_blank"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+        <a href="https://youtube.com" class="contact-soc" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg></a>
+        <a href="https://tiktok.com" class="contact-soc" target="_blank"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
+        <a href="http://wa.me/5544998381478" class="contact-soc" target="_blank"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+      </div>
+    </div>
+
+    <div class="contact-right reveal">
+      <h3>Solicite mais informações</h3>
+      <div class="form-group">
+        <label>Nome completo</label>
+        <input type="text" placeholder="Seu nome" />
+      </div>
+      <div class="form-group">
+        <label>WhatsApp</label>
+        <input type="tel" placeholder="(44) 99999-9999" />
+      </div>
+      <div class="form-group">
+        <label>Interesse</label>
+        <select>
+          <option>Aula Experimental Grátis</option>
+          <option>Musculação</option>
+          <option>Studio Bike</option>
+          <option>Pilates</option>
+          <option>Yoga</option>
+          <option>Planos e Mensalidades</option>
+          <option>Outros</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Mensagem</label>
+        <textarea placeholder="Como podemos te ajudar?"></textarea>
+      </div>
+      <button class="btn-form">ENVIAR MENSAGEM</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div class="footer-logo-text">
+        <div class="flti"><svg viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29l-1.43-1.43z"/></svg></div>
+        ACADEMIA <span>TOLEDO</span>
+      </div>
+      <p class="footer-tagline">A academia mais completa de Toledo – PR. Estrutura de ponta, equipe especializada e planos para todos os perfis.</p>
+      <div class="footer-social">
+        <a href="https://instagram.com" class="footer-soc" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+        <a href="https://facebook.com" class="footer-soc" target="_blank"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+        <a href="https://youtube.com" class="footer-soc" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg></a>
+        <a href="https://tiktok.com" class="footer-soc" target="_blank"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
+        <a href="http://wa.me/5544998381478" class="footer-soc" target="_blank"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Navegação</h4>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#aulas">Aulas &amp; Studios</a></li>
+        <li><a href="#planos">Programas</a></li>
+        <li><a href="#planos">Planos e Preços</a></li>
+        <li><a href="#unidades">Nossa Unidade</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Modalidades</h4>
+      <ul>
+        <li><a href="#">Musculação</a></li>
+        <li><a href="#">Studio Bike</a></li>
+        <li><a href="#">Pilates</a></li>
+        <li><a href="#">Yoga</a></li>
+        <li><a href="#">Funcional</a></li>
+        <li><a href="#">Spa &amp; Relaxamento</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Contato</h4>
+      <ul class="footer-contact-list">
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.25 1.01l-2.2 2.22z"/></svg>
+          <span><strong>Telefone</strong>(44) 99838-1478</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <span><strong>E-mail</strong>contato@academiatoledobr.com.br</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>
+          <span><strong>Endereço</strong>Rua Principal, 100 – Centro, Toledo – PR</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm.5 5v5.25l4.5 2.67-.75 1.23L11 13V7h1.5z"/></svg>
+          <span><strong>Horários</strong>Seg–Sex: 05h–24h | Sáb: 08h–18h | Dom: 08h–12h</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 Academia Toledo – PR. Todos os direitos reservados.</p>
+    <div class="footer-bottom-links">
+      <a href="#">Política de Privacidade</a>
+      <a href="#">Termos de Uso</a>
+      <a href="#">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<!-- WA FLOAT -->
+<a href="http://wa.me/5544998381478" class="wa-float" target="_blank">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+</body>
+</html>
