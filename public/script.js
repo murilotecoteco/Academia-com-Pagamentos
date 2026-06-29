@@ -1,3 +1,48 @@
+function toggleMenu() {
+  const menu = document.getElementById('navMenu');
+  if (menu) menu.classList.toggle('open');
+}
+
+function openMainVideo(el) {
+  if (!el) return;
+
+  el.innerHTML = `
+    <iframe 
+      src="https://www.youtube.com/embed/5Lb6Rh8ZqQ4?autoplay=1"
+      style="width:100%;height:500px;border:none;display:block;"
+      allowfullscreen>
+    </iframe>
+  `;
+}
+
+function toggleFaq(btn) {
+  if (!btn) return;
+
+  const item = btn.parentElement;
+  if (!item) return;
+
+  const answer = item.querySelector('.faq-answer');
+  const isOpen = item.classList.contains('open');
+
+  document.querySelectorAll('.faq-item.open').forEach(other => {
+    if (other !== item) {
+      other.classList.remove('open');
+      const ans = other.querySelector('.faq-answer');
+      if (ans) ans.style.maxHeight = null;
+    }
+  });
+
+  if (!answer) return;
+
+  if (isOpen) {
+    item.classList.remove('open');
+    answer.style.maxHeight = null;
+  } else {
+    item.classList.add('open');
+    answer.style.maxHeight = answer.scrollHeight + 'px';
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('scroll', () => {
@@ -6,51 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
       header.classList.toggle('scrolled', window.scrollY > 40);
     }
   });
-
-  function toggleMenu() {
-    const menu = document.getElementById('navMenu');
-    if (menu) menu.classList.toggle('open');
-  }
-
-  function openMainVideo(el) {
-    if (!el) return;
-
-    el.innerHTML = `
-      <iframe 
-        src="https://www.youtube.com/embed/5Lb6Rh8ZqQ4?autoplay=1"
-        style="width:100%;height:500px;border:none;display:block;"
-        allowfullscreen>
-      </iframe>
-    `;
-  }
-
-  function toggleFaq(btn) {
-    if (!btn) return;
-
-    const item = btn.parentElement;
-    if (!item) return;
-
-    const answer = item.querySelector('.faq-answer');
-    const isOpen = item.classList.contains('open');
-
-    document.querySelectorAll('.faq-item.open').forEach(other => {
-      if (other !== item) {
-        other.classList.remove('open');
-        const ans = other.querySelector('.faq-answer');
-        if (ans) ans.style.maxHeight = null;
-      }
-    });
-
-    if (!answer) return;
-
-    if (isOpen) {
-      item.classList.remove('open');
-      answer.style.maxHeight = null;
-    } else {
-      item.classList.add('open');
-      answer.style.maxHeight = answer.scrollHeight + 'px';
-    }
-  }
 
   /* =========================
      REVEAL ANIMATION
