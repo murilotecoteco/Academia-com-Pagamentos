@@ -456,6 +456,8 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
-app.listen(3000, () => {
-  log("info", "Servidor rodando em http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
