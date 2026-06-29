@@ -43,6 +43,44 @@ function toggleFaq(btn) {
   }
 }
 
+/* =========================
+   CAROUSEL
+========================= */
+let carouselIndex = 0;
+let carouselSlides = [];
+let carouselTrackEl = null;
+let carouselDotsEl = null;
+
+function updateCarousel() {
+  if (!carouselTrackEl || carouselSlides.length === 0) return;
+
+  const slideWidth = carouselSlides[0].getBoundingClientRect().width;
+  const gap = parseFloat(getComputedStyle(carouselTrackEl).gap) || 0;
+
+  carouselTrackEl.style.transform = `translateX(-${carouselIndex * (slideWidth + gap)}px)`;
+
+  if (carouselDotsEl) {
+    carouselDotsEl.querySelectorAll('.dot').forEach((dot, i) => {
+      dot.classList.toggle('active', i === carouselIndex);
+    });
+  }
+}
+
+function moveCarousel(direction) {
+  if (carouselSlides.length === 0) return;
+
+  carouselIndex += direction;
+  if (carouselIndex < 0) carouselIndex = carouselSlides.length - 1;
+  if (carouselIndex >= carouselSlides.length) carouselIndex = 0;
+
+  updateCarousel();
+}
+
+function goToSlide(index) {
+  carouselIndex = index;
+  updateCarousel();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('scroll', () => {
@@ -109,6 +147,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { threshold: 0.5 });
 
     countEls.forEach(el => countObs.observe(el));
+  }
+
+  /* =========================
+     CAROUSEL INIT
+  ========================= */
+  carouselTrackEl = document.getElementById('carousel');
+  carouselDotsEl = document.getElementById('carouselDots');
+
+  if (carouselTrackEl) {
+    carouselSlides = Array.from(carouselTrackEl.querySelectorAll('.carousel-slide'));
+
+    if (carouselDotsEl && carouselSlides.length > 0) {
+      carouselSlides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'dot' + (i === 0 ? ' active' : '');
+        dot.type = 'button';
+        dot.setAttribute('aria-label', 'Ir para slide ' + (i + 1));
+        dot.addEventListener('click', () => goToSlide(i));
+        carouselDotsEl.appendChild(dot);
+      });
+    }
+
+    updateCarousel();
+    window.addEventListener('resize', updateCarousel);
   }
 
   /* =========================
