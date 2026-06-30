@@ -497,9 +497,23 @@ app.use(
         scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://maps.google.com"],
-        frameSrc: ["https://maps.google.com"],
-        connectSrc: ["'self'", "https://*.supabase.co"]
+        imgSrc: [
+          "'self'",
+          "data:",
+          "https://images.unsplash.com",
+          "https://media.istockphoto.com",
+          "https://maps.google.com",
+          "https://maps.gstatic.com",
+          "https://*.googleapis.com",
+          "https://*.gstatic.com"
+        ],
+        frameSrc: ["https://maps.google.com", "https://www.google.com"],
+        connectSrc: [
+          "'self'",
+          "https://*.supabase.co",
+          "https://maps.google.com",
+          "https://www.google.com"
+        ]
       }
     }
   })
