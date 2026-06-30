@@ -7,7 +7,7 @@
  *  - Cadastro e login de usuários via Supabase Auth
  *  - Logout e obtenção do usuário autenticado (ponto único: getCurrentUser)
  *  - Início do fluxo de pagamento via Stripe Checkout, chamando o backend
- *    em POST /create-checkout-session
+ *    em POST /create-checkout-session com JWT de autenticação
  *  - Feedback de status para o usuário, com fallback seguro caso o
  *    elemento de status não exista no DOM
  *
@@ -29,7 +29,6 @@ const btnRegister = document.getElementById("btn-register");
 const btnLogin = document.getElementById("btn-login");
 const btnGetUser = document.getElementById("btn-getuser");
 const btnLogout = document.getElementById("btn-logout");
-const btnPagar = document.getElementById("btn-pagar");
 
 // Tamanho mínimo de senha — deve ser igual ou maior que o mínimo
 // configurado em Supabase > Authentication > Policies (padrão: 6).
@@ -190,42 +189,63 @@ async function showCurrentUser() {
    ============================================================ */
 
 // Evita que cliques duplicados no botão de pagamento criem mais de
-// uma sessão de checkout ao mesmo tempo (cada clique gera um session_id
-// diferente no Stripe, então a deduplicação do backend não pega isso).
+// uma sessão de checkout ao mesmo tempo.
 let isProcessingPayment = false;
 
-async function pagar() {
+/**
+ * Inicia o fluxo de pagamento para o plano informado.
+ *
+ * @param {string} planId - identificador do plano: "mensal" | "trimestral" | "semestral" | "anual"
+ * @param {HTMLElement|null} btnEl - botão que disparou o clique (para desabilitar durante o processo)
+ * @returns {Promise<void>}
+ */
+export async function pagar(planId, btnEl = null) {
   if (isProcessingPayment) return;
 
-  const user = await getCurrentUser(true);
-  if (!user) {
-    setStatus("Faça login primeiro.", "error");
+  // Obtém a sessão (token JWT) do Supabase — mais confiável que getUser()
+  // pois retorna o token mesmo offline (cached), que é o que precisamos enviar.
+  const { data: sessionData } = await supabase.auth.getSession();
+  const session = sessionData?.session;
+
+  if (!session?.access_token) {
+    // Usuário não logado — redireciona para a página de login.
+    // Salva o plano escolhido para retomar após o login (melhoria futura).
+    window.location.href = `/login.html?redirect=planos&plan=${encodeURIComponent(planId)}`;
     return;
   }
 
   isProcessingPayment = true;
-  if (btnPagar) btnPagar.disabled = true;
-  setStatus("Redirecionando para o pagamento...");
+  if (btnEl) {
+    btnEl.disabled = true;
+    btnEl.dataset.originalText = btnEl.textContent;
+    btnEl.textContent = "Aguarde...";
+  }
 
   try {
     let response;
     try {
       response = await fetch("/create-checkout-session", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: user.id,
-          email: user.email
-        })
+        headers: {
+          "Content-Type": "application/json",
+          // TAREFA 5: Envia o JWT validado pelo servidor — nunca user_id no body.
+          Authorization: `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({ plan_id: planId })
       });
     } catch (networkError) {
       console.error(networkError);
-      setStatus("Erro de conexão ao iniciar o pagamento.", "error");
+      alert("Erro de conexão ao iniciar o pagamento. Verifique sua internet e tente novamente.");
       return;
     }
 
     if (!response.ok) {
-      setStatus(`Erro ao criar checkout (HTTP ${response.status}).`, "error");
+      let msg = `Erro ao criar checkout (HTTP ${response.status}).`;
+      try {
+        const errData = await response.json();
+        if (errData?.error) msg = errData.error;
+      } catch (_) { /* ignora erro de parse */ }
+      alert(msg);
       return;
     }
 
@@ -234,28 +254,32 @@ async function pagar() {
       result = await response.json();
     } catch (parseError) {
       console.error(parseError);
-      setStatus("Resposta inválida do servidor de pagamento.", "error");
+      alert("Resposta inválida do servidor de pagamento.");
       return;
     }
 
     if (!result?.url) {
-      setStatus("Erro ao criar checkout: URL não recebida.", "error");
+      alert("Erro ao criar checkout: URL não recebida.");
       return;
     }
 
     window.location.href = result.url;
   } finally {
     isProcessingPayment = false;
-    if (btnPagar) btnPagar.disabled = false;
+    if (btnEl) {
+      btnEl.disabled = false;
+      if (btnEl.dataset.originalText) {
+        btnEl.textContent = btnEl.dataset.originalText;
+      }
+    }
   }
 }
 
 /* ============================================================
-   EVENTOS — ligação das funções com a interface
+   EVENTOS — ligação das funções com a interface (login.html)
    ============================================================ */
 
 btnRegister?.addEventListener("click", registerUser);
 btnLogin?.addEventListener("click", loginUser);
 btnGetUser?.addEventListener("click", showCurrentUser);
 btnLogout?.addEventListener("click", logoutUser);
-btnPagar?.addEventListener("click", pagar);

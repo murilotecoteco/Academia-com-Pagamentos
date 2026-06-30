@@ -60,7 +60,7 @@ function updateCarousel() {
   carouselTrackEl.style.transform = `translateX(-${carouselIndex * (slideWidth + gap)}px)`;
 
   if (carouselDotsEl) {
-    carouselDotsEl.querySelectorAll('.dot').forEach((dot, i) => {
+    carouselDotsEl.querySelectorAll('.carousel-dot').forEach((dot, i) => {
       dot.classList.toggle('active', i === carouselIndex);
     });
   }
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (carouselDotsEl && carouselSlides.length > 0) {
       carouselSlides.forEach((_, i) => {
         const dot = document.createElement('button');
-        dot.className = 'dot' + (i === 0 ? ' active' : '');
+        dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
         dot.type = 'button';
         dot.setAttribute('aria-label', 'Ir para slide ' + (i + 1));
         dot.addEventListener('click', () => goToSlide(i));
@@ -180,31 +180,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnForm) {
     btnForm.addEventListener('click', function () {
-      const inputs = document.querySelectorAll('.contact-right input, .contact-right textarea');
+      const nameInput = document.querySelector('.contact-right input[type="text"]');
+      const phoneInput = document.querySelector('.contact-right input[type="tel"]');
+      const selectInput = document.querySelector('.contact-right select');
+      const textareaInput = document.querySelector('.contact-right textarea');
 
-      let ok = true;
-      inputs.forEach(i => {
-        if (!i.value.trim()) ok = false;
-      });
+      const name = nameInput?.value?.trim() || '';
+      const phone = phoneInput?.value?.trim() || '';
+      const interest = selectInput?.value || '';
+      const message = textareaInput?.value?.trim() || '';
 
-      if (ok) {
-        this.textContent = '✓ MENSAGEM ENVIADA!';
-        this.style.background = '#25d366';
-
-        setTimeout(() => {
-          this.textContent = 'ENVIAR MENSAGEM';
-          this.style.background = '';
-        }, 3000);
-
-      } else {
-        this.textContent = 'PREENCHA TODOS OS CAMPOS';
+      if (!name || !phone) {
+        this.textContent = 'PREENCHA NOME E WHATSAPP';
         this.style.background = '#e74c3c';
 
         setTimeout(() => {
           this.textContent = 'ENVIAR MENSAGEM';
           this.style.background = '';
         }, 2500);
+        return;
       }
+
+      const waMessage = `Olá! Meu nome é ${name}.\nTelefone: ${phone}\nInteresse: ${interest}\nMensagem: ${message}`;
+      const waUrl = `https://wa.me/5544998381478?text=${encodeURIComponent(waMessage)}`;
+
+      this.textContent = '✓ REDIRECIONANDO...';
+      this.style.background = '#25d366';
+
+      setTimeout(() => {
+        window.open(waUrl, '_blank');
+        this.textContent = 'ENVIAR MENSAGEM';
+        this.style.background = '';
+      }, 500);
     });
   }
 
@@ -237,5 +244,45 @@ document.addEventListener('DOMContentLoaded', () => {
   rippleBtns.forEach(btn => {
     btn.addEventListener('click', addRipple);
   });
+
+
+  /* =========================
+     MOBILE MENU
+  ========================= */
+  const mobileToggle = document.getElementById('mobileToggle');
+  if (mobileToggle) {
+    mobileToggle.addEventListener('click', toggleMenu);
+  }
+
+  /* =========================
+     CAROUSEL BUTTONS
+  ========================= */
+  const prevBtn = document.getElementById('carouselPrev');
+  const nextBtn = document.getElementById('carouselNext');
+  if (prevBtn) prevBtn.addEventListener('click', () => moveCarousel(-1));
+  if (nextBtn) nextBtn.addEventListener('click', () => moveCarousel(1));
+
+  /* =========================
+     VIDEO CONTAINER
+  ========================= */
+  const videoContainer = document.getElementById('mainVideoContainer');
+  if (videoContainer) {
+    videoContainer.addEventListener('click', () => openMainVideo(videoContainer));
+  }
+
+  /* =========================
+     FAQ BUTTONS
+  ========================= */
+  document.querySelectorAll('.faq-question[data-faq-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => toggleFaq(btn));
+  });
+
+  /* =========================
+     DYNAMIC COPYRIGHT YEAR
+  ========================= */
+  const footerYear = document.getElementById('footerYear');
+  if (footerYear) {
+    footerYear.textContent = new Date().getFullYear();
+  }
 
 });

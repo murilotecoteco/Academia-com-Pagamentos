@@ -110,15 +110,18 @@ Academia-com-Pagamentos
 │
 ├── public/
 │   ├── index.html
+│   ├── login.html
 │   ├── sucesso.html
 │   ├── cancelado.html
-│   ├── css/
-│   ├── js/
-│   └── assets/
+│   ├── style.css
+│   ├── script.js
+│   ├── auth.js
+│   └── supabase.js
 │
 ├── server.js
 ├── supabaseClient.js
 ├── package.json
+├── .env
 ├── .gitignore
 └── README.md
 ```

@@ -3,6 +3,8 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const Stripe = require("stripe");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 
 const supabase = require("./supabaseClient");
 
@@ -12,8 +14,7 @@ const app = express();
    ⚙️ CONFIGURAÇÃO
    ============================================================ */
 
-// Falha rápido e com erro claro no boot se faltar configuração essencial,
-// em vez de o erro aparecer só quando o Stripe for chamado em produção.
+// Falha rápido e com erro claro no boot se faltar configuração essencial.
 const REQUIRED_ENV_VARS = ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET"];
 const missingEnvVars = REQUIRED_ENV_VARS.filter((key) => !process.env[key]);
 
@@ -28,6 +29,41 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 // (ex.: https://seusite.com) — sem isso, cai no localhost (apenas dev).
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
+// ---------------------------------------------------------------
+// 🗂️ CATÁLOGO DE PLANOS
+//
+// Cada plano referencia um Price criado no Stripe Dashboard.
+// Crie os Products/Prices no Dashboard, anote os price_id (price_xxx)
+// e defina-os no .env — nunca hard-coded aqui.
+//
+// Exemplo de .env:
+//   STRIPE_PRICE_MENSAL=price_xxx
+//   STRIPE_PRICE_TRIMESTRAL=price_xxx
+//   STRIPE_PRICE_SEMESTRAL=price_xxx
+//   STRIPE_PRICE_ANUAL=price_xxx
+//
+// Enquanto os IDs não existirem, as variáveis ficam indefinidas e
+// o checkout retorna 400 para o plano solicitado.
+// ---------------------------------------------------------------
+const PLANS = {
+  mensal: {
+    priceId: process.env.STRIPE_PRICE_MENSAL,
+    name: "Plano Mensal"
+  },
+  trimestral: {
+    priceId: process.env.STRIPE_PRICE_TRIMESTRAL,
+    name: "Plano Trimestral"
+  },
+  semestral: {
+    priceId: process.env.STRIPE_PRICE_SEMESTRAL,
+    name: "Plano Semestral"
+  },
+  anual: {
+    priceId: process.env.STRIPE_PRICE_ANUAL,
+    name: "Plano Anual"
+  }
+};
+
 // Logger com formato consistente para facilitar debug em produção.
 function log(level, message, meta = {}) {
   const ts = new Date().toISOString();
@@ -36,13 +72,9 @@ function log(level, message, meta = {}) {
   console.log(`[${ts}] ${icon} ${message} ${metaStr}`.trim());
 }
 
-// Validações de dados recebidos do frontend.
+// Validações de dados.
 function isValidEmail(email) {
   return typeof email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function isValidUserId(user_id) {
-  return typeof user_id === "string" && user_id.trim().length > 0;
 }
 
 // Soma 1 mês a uma data. Usado apenas como FALLBACK do período de
@@ -86,34 +118,18 @@ async function getBillingPeriod(subscriptionId, eventTimestampSec) {
  *
  * Idempotente: o período vem da própria Subscription do Stripe (ou, em
  * fallback, do timestamp do EVENTO), nunca do horário em que o webhook
- * é processado — reprocessar o mesmo evento (reentrega do Stripe) sempre
- * produz o mesmo resultado, em vez de "esticar" a assinatura a cada retry.
+ * é processado.
  *
- * Requer constraint UNIQUE em subscriptions.user_id (uma linha por usuário):
- *   ALTER TABLE subscriptions ADD CONSTRAINT subscriptions_user_id_key UNIQUE (user_id);
- *
- * Colunas assumidas na tabela subscriptions — ajuste os nomes abaixo se o
- * seu schema real for diferente:
- *   user_id, status, plan, stripe_session_id, stripe_subscription_id,
- *   stripe_customer_id, current_period_start, current_period_end,
- *   canceled_at, updated_at
- *
- *   ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS stripe_subscription_id text;
- *   ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS stripe_customer_id text;
- *   ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS canceled_at timestamptz;
- *   CREATE INDEX IF NOT EXISTS subscriptions_stripe_subscription_id_idx
- *     ON subscriptions (stripe_subscription_id);
- *   CREATE INDEX IF NOT EXISTS subscriptions_stripe_customer_id_idx
- *     ON subscriptions (stripe_customer_id);
+ * Requer constraint UNIQUE em subscriptions.user_id (uma linha por usuário).
  */
-async function activateSubscription({ user_id, sessionId, subscriptionId, customerId, eventTimestampSec }) {
+async function activateSubscription({ user_id, plan, sessionId, subscriptionId, customerId, eventTimestampSec }) {
   const { periodStart, periodEnd } = await getBillingPeriod(subscriptionId, eventTimestampSec);
 
   const { error } = await supabase.from("subscriptions").upsert(
     {
       user_id,
       status: "active",
-      plan: "mensal",
+      plan: plan || "mensal", // fallback caso metadata não chegue
       stripe_session_id: sessionId,
       stripe_subscription_id: subscriptionId,
       stripe_customer_id: customerId,
@@ -136,6 +152,7 @@ async function activateSubscription({ user_id, sessionId, subscriptionId, custom
 
   log("success", "Assinatura ativada/renovada", {
     user_id,
+    plan,
     subscription_id: subscriptionId,
     current_period_end: periodEnd.toISOString()
   });
@@ -157,11 +174,15 @@ async function handleCheckoutCompleted(session, eventId, eventTimestampSec) {
   // (fallback), gravados na criação da sessão de checkout.
   const user_id = session.metadata?.user_id || session.client_reference_id || null;
 
+  // plan gravado em metadata na criação da sessão
+  const plan = session.metadata?.plan || null;
+
   log("info", "checkout.session.completed recebido", {
     event_id: eventId,
     session_id: sessionId,
     subscription_id: subscriptionId,
     user_id,
+    plan,
     email,
     amount,
     payment_status: paymentStatus
@@ -179,9 +200,7 @@ async function handleCheckoutCompleted(session, eventId, eventTimestampSec) {
     return;
   }
 
-  // Upsert idempotente do pagamento: evita duplicidade mesmo se o Stripe
-  // reenviar o mesmo evento (entrega "at least once").
-  //
+  // Upsert idempotente do pagamento.
   // IMPORTANTE: exige constraint UNIQUE na coluna session_id.
   //   ALTER TABLE payments ADD CONSTRAINT payments_session_id_key UNIQUE (session_id);
   const { data: inserted, error: paymentError } = await supabase
@@ -207,12 +226,9 @@ async function handleCheckoutCompleted(session, eventId, eventTimestampSec) {
   }
 
   // A ativação da assinatura roda SEMPRE, mesmo quando o pagamento já
-  // existia (reentrega do Stripe). Isso evita um cenário real de bug:
-  // pagamento salvo com sucesso → ativação da assinatura falha →
-  // Stripe reentrega o evento → pagamento (já existente) faria a gente
-  // pular a ativação se ela só rodasse no caminho "inserido pela primeira vez".
+  // existia (reentrega do Stripe).
   if (user_id) {
-    await activateSubscription({ user_id, sessionId, subscriptionId, customerId, eventTimestampSec });
+    await activateSubscription({ user_id, plan, sessionId, subscriptionId, customerId, eventTimestampSec });
   } else {
     log("warn", "Assinatura não ativada: pagamento sem user_id vinculado", {
       session_id: sessionId
@@ -224,18 +240,10 @@ async function handleCheckoutCompleted(session, eventId, eventTimestampSec) {
  * Processa um evento customer.subscription.deleted: marca a assinatura
  * como cancelada na tabela subscriptions.
  *
- * Dispara quando uma Subscription do Stripe é cancelada de fato — pelo
- * Dashboard, pela API, pelo Customer Portal, ou (dependendo da config.
- * de "smart retries") após esgotarem as tentativas de cobrança de uma
- * fatura em atraso.
- *
  * Identificação do usuário, em ordem de preferência:
- *   1) metadata.user_id da própria Subscription (gravado na criação do
- *      checkout via `subscription_data.metadata`) — é a forma mais
- *      direta e funciona mesmo se a Subscription for cancelada por um
- *      caminho que não passa pelo nosso backend (ex.: Customer Portal).
- *   2) stripe_subscription_id salvo no Supabase em activateSubscription.
- *   3) stripe_customer_id salvo no Supabase em activateSubscription.
+ *   1) metadata.user_id da própria Subscription
+ *   2) stripe_subscription_id salvo no Supabase
+ *   3) stripe_customer_id salvo no Supabase
  */
 async function handleSubscriptionDeleted(subscription, eventId) {
   const subscriptionId = subscription.id;
@@ -275,12 +283,10 @@ async function handleSubscriptionDeleted(subscription, eventId) {
       subscription_id: subscriptionId,
       error: error.message
     });
-    throw error; // propaga para o webhook responder 500 e o Stripe reentregar
+    throw error;
   }
 
   if (!data || data.length === 0) {
-    // Não é necessariamente um erro: pode ser uma Subscription de teste,
-    // ou um evento referente a uma assinatura que nunca foi ativada aqui.
     log("warn", "Nenhuma assinatura correspondente encontrada para cancelar", {
       subscription_id: subscriptionId,
       customer_id: customerId,
@@ -295,6 +301,126 @@ async function handleSubscriptionDeleted(subscription, eventId) {
   });
 }
 
+/**
+ * Processa customer.subscription.updated: sincroniza status e período
+ * da assinatura quando ela é alterada (ex.: trial → active, downgrade/upgrade).
+ */
+async function handleSubscriptionUpdated(subscription, eventId) {
+  const subscriptionId = subscription.id;
+  const customerId = subscription.customer ?? null;
+  const user_id = subscription.metadata?.user_id || null;
+  const status = subscription.status; // active, past_due, canceled, etc.
+
+  log("info", "customer.subscription.updated recebido", {
+    event_id: eventId,
+    subscription_id: subscriptionId,
+    status,
+    user_id
+  });
+
+  const periodStart = subscription.current_period_start
+    ? new Date(subscription.current_period_start * 1000).toISOString()
+    : undefined;
+  const periodEnd = subscription.current_period_end
+    ? new Date(subscription.current_period_end * 1000).toISOString()
+    : undefined;
+
+  const updatePayload = {
+    status,
+    updated_at: new Date().toISOString(),
+    ...(periodStart && { current_period_start: periodStart }),
+    ...(periodEnd && { current_period_end: periodEnd })
+  };
+
+  let query = supabase.from("subscriptions").update(updatePayload);
+
+  if (user_id) {
+    query = query.eq("user_id", user_id);
+  } else if (subscriptionId) {
+    query = query.eq("stripe_subscription_id", subscriptionId);
+  } else if (customerId) {
+    query = query.eq("stripe_customer_id", customerId);
+  } else {
+    log("warn", "Evento subscription.updated sem identificadores utilizáveis, ignorado", {
+      event_id: eventId
+    });
+    return;
+  }
+
+  const { error } = await query;
+
+  if (error) {
+    log("error", "Falha ao atualizar assinatura no Supabase", {
+      subscription_id: subscriptionId,
+      error: error.message
+    });
+    throw error;
+  }
+
+  log("success", "Assinatura atualizada", { subscription_id: subscriptionId, status });
+}
+
+/**
+ * Processa invoice.payment_failed: marca a assinatura como past_due
+ * e registra na tabela payments (status: "failed").
+ */
+async function handlePaymentFailed(invoice, eventId) {
+  const customerId = invoice.customer ?? null;
+  const subscriptionId = invoice.subscription ?? null;
+  const sessionId = invoice.id; // usa invoice.id como chave de idempotência
+  const email = invoice.customer_email ?? null;
+  const amount = invoice.amount_due ?? 0;
+
+  log("info", "invoice.payment_failed recebido", {
+    event_id: eventId,
+    invoice_id: sessionId,
+    subscription_id: subscriptionId,
+    customer_id: customerId
+  });
+
+  // Salva o pagamento falho no histórico
+  const { error: paymentError } = await supabase
+    .from("payments")
+    .upsert(
+      { session_id: sessionId, email, amount, user_id: null, status: "failed" },
+      { onConflict: "session_id", ignoreDuplicates: true }
+    );
+
+  if (paymentError) {
+    log("warn", "Falha ao salvar pagamento falho no Supabase", {
+      invoice_id: sessionId,
+      error: paymentError.message
+    });
+  }
+
+  // Marca assinatura como past_due
+  let query = supabase
+    .from("subscriptions")
+    .update({ status: "past_due", updated_at: new Date().toISOString() });
+
+  if (subscriptionId) {
+    query = query.eq("stripe_subscription_id", subscriptionId);
+  } else if (customerId) {
+    query = query.eq("stripe_customer_id", customerId);
+  } else {
+    log("warn", "invoice.payment_failed sem identificadores utilizáveis", { event_id: eventId });
+    return;
+  }
+
+  const { error } = await query;
+  if (error) {
+    log("error", "Falha ao marcar assinatura como past_due", {
+      subscription_id: subscriptionId,
+      error: error.message
+    });
+    throw error;
+  }
+
+  log("success", "Assinatura marcada como past_due após falha de pagamento", {
+    subscription_id: subscriptionId
+  });
+}
+
 /* ============================================================
    🔥 WEBHOOK (PRECISA VIR ANTES DE express.json())
    ============================================================ */
@@ -302,6 +428,8 @@ async function handleSubscriptionDeleted(subscription, eventId) {
 // No Dashboard/CLI do Stripe, este endpoint precisa estar inscrito em:
 //   - checkout.session.completed
 //   - customer.subscription.deleted
+//   - customer.subscription.updated
+//   - invoice.payment_failed
 app.post(
   "/webhook",
   express.raw({ type: "application/json" }),
@@ -332,10 +460,11 @@ app.post(
         await handleCheckoutCompleted(event.data.object, event.id, event.created);
       } else if (event.type === "customer.subscription.deleted") {
         await handleSubscriptionDeleted(event.data.object, event.id);
+      } else if (event.type === "customer.subscription.updated") {
+        await handleSubscriptionUpdated(event.data.object, event.id);
+      } else if (event.type === "invoice.payment_failed") {
+        await handlePaymentFailed(event.data.object, event.id);
       } else {
-        // Outros tipos de evento podem ser tratados aqui no futuro
-        // (ex.: invoice.payment_failed para cobranças recusadas,
-        // customer.subscription.updated para mudanças de plano/status).
         log("info", "Evento Stripe ignorado (tipo não tratado)", {
           event_id: event.id,
           type: event.type
@@ -348,8 +477,7 @@ app.post(
         event_id: event.id,
         error: err.message
       });
-      // 500 faz o Stripe reentregar o evento automaticamente depois,
-      // em vez de marcarmos como recebido um evento que falhou ao processar.
+      // 500 faz o Stripe reentregar o evento automaticamente.
       return res.status(500).json({ error: "Erro ao processar evento." });
     }
   }
@@ -358,6 +486,24 @@ app.post(
 /* ============================================================
    🌐 MIDDLEWARE (sempre depois da rota /webhook)
    ============================================================ */
+
+// Segurança: cabeçalhos HTTP seguros (CSP, HSTS, X-Frame-Options, etc.)
+app.use(
+  helmet({
+    // Permite carregar fontes do Google Fonts e scripts do CDN do Supabase
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://maps.google.com"],
+        frameSrc: ["https://maps.google.com"],
+        connectSrc: ["'self'", "https://*.supabase.co"]
+      }
+    }
+  })
+);
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -370,71 +516,110 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-app.post("/create-checkout-session", async (req, res) => {
-  try {
-    const { user_id, email } = req.body ?? {};
+// Rate limit: máximo 10 tentativas por minuto por IP na rota de checkout,
+// para evitar abuso (criação de dezenas de sessões por segundo).
+const checkoutLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minuto
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Muitas requisições. Aguarde um momento e tente novamente." }
+});
 
-    if (!isValidUserId(user_id)) {
-      return res.status(400).json({ error: "user_id inválido ou ausente." });
+app.post("/create-checkout-session", checkoutLimiter, async (req, res) => {
+  try {
+    // ---------------------------------------------------------------
+    // TAREFA 5: Validar JWT antes de qualquer outra coisa.
+    // O user_id e email vêm do token, nunca do body — assim um cliente
+    // malicioso não pode se passar por outro usuário.
+    // ---------------------------------------------------------------
+    const authHeader = req.headers.authorization || "";
+    const token = authHeader.replace("Bearer ", "").trim();
+
+    if (!token) {
+      return res.status(401).json({ error: "Não autenticado. Token ausente." });
     }
 
-    if (!isValidEmail(email)) {
-      return res.status(400).json({ error: "email inválido ou ausente." });
+    const { data: authData, error: authError } = await supabase.auth.getUser(token);
+
+    if (authError || !authData?.user) {
+      log("warn", "Token JWT inválido na rota de checkout", {
+        error: authError?.message
+      });
+      return res.status(401).json({ error: "Não autenticado. Token inválido ou expirado." });
+    }
+
+    const user_id = authData.user.id;
+    const email = authData.user.email;
+
+    // ---------------------------------------------------------------
+    // TAREFA 3: Validar o plano contra a allowlist do servidor.
+    // O price_id nunca vem do body — apenas o nome do plano,
+    // e o servidor resolve o price_id correspondente.
+    // ---------------------------------------------------------------
+    const { plan_id } = req.body ?? {};
+
+    if (!plan_id || !PLANS[plan_id]) {
+      return res.status(400).json({
+        error: `Plano inválido. Escolha um de: ${Object.keys(PLANS).join(", ")}.`
+      });
+    }
+
+    const plan = PLANS[plan_id];
+
+    if (!plan.priceId) {
+      log("warn", "Price ID não configurado para o plano", { plan_id });
+      return res.status(503).json({
+        error: `O plano "${plan_id}" ainda não está disponível. Tente novamente em breve.`
+      });
     }
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       payment_method_types: ["card"],
 
-      // Preço e produto definidos aqui no servidor, nunca a partir do
-      // corpo da requisição — evita que o cliente manipule o valor cobrado.
-      // Para um catálogo mais "gerenciável" em produção, considere criar
-      // o Price uma vez no Dashboard do Stripe e usar
-      // `price: process.env.STRIPE_PRICE_ID` no lugar de `price_data`.
+      // price referencia o Price criado no Stripe Dashboard — o valor
+      // e o intervalo de cobrança estão definidos lá, não aqui.
       line_items: [
         {
-          price_data: {
-            currency: "brl",
-            product_data: {
-              name: "Plano Mensal Academia"
-            },
-            unit_amount: 9990,
-            recurring: { interval: "month" }
-          },
+          price: plan.priceId,
           quantity: 1
         }
       ],
 
-      success_url: `${BASE_URL}/sucesso.html`,
+      success_url: `${BASE_URL}/sucesso.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${BASE_URL}/cancelado.html`,
 
-      // 🔥 Liga o usuário à sessão de duas formas redundantes:
-      // client_reference_id é um campo nativo do Stripe (sempre string,
-      // sobrevive mesmo se algo der errado com metadata) e metadata
-      // guarda também o e-mail.
+      // Liga o usuário à sessão de duas formas redundantes.
       client_reference_id: String(user_id),
       metadata: {
         user_id: String(user_id),
-        email: String(email)
+        email: String(email),
+        plan: plan_id // gravado no Supabase pelo webhook
       },
 
-      // 🔑 Grava o user_id também na própria Subscription (não só na
-      // Session). Essencial: o evento customer.subscription.deleted
-      // entrega o objeto Subscription, sem qualquer referência à Session
-      // original — sem isso não haveria como saber de quem é a
-      // assinatura cancelada.
+      // Grava user_id e plan na própria Subscription (não só na Session).
+      // Essencial para o evento customer.subscription.deleted, que entrega
+      // o objeto Subscription sem referência à Session original.
       subscription_data: {
         metadata: {
-          user_id: String(user_id)
+          user_id: String(user_id),
+          plan: plan_id
         }
-      }
+      },
+
+      // Pré-preenche o e-mail no checkout para melhor UX
+      customer_email: email
     });
 
-    log("info", "Sessão de checkout criada", { session_id: session.id, user_id });
+    log("info", "Sessão de checkout criada", {
+      session_id: session.id,
+      user_id,
+      plan: plan_id
+    });
     res.json({ url: session.url });
   } catch (error) {
     log("error", "Erro ao criar sessão de checkout no Stripe", { error: error.message });
-    // Não expõe detalhes internos do erro para o cliente.
     res.status(500).json({ error: "Não foi possível iniciar o pagamento." });
   }
 });
@@ -443,16 +628,13 @@ app.post("/create-checkout-session", async (req, res) => {
    🛑 INICIALIZAÇÃO
    ============================================================ */
 
-// Rede de segurança global — evita que um erro não tratado em qualquer
-// parte do código derrube o processo de forma silenciosa.
+// Rede de segurança global — evita que um erro não tratado derrube o processo.
 process.on("unhandledRejection", (reason) => {
   log("error", "unhandledRejection", { reason: reason?.message || String(reason) });
 });
 
 process.on("uncaughtException", (err) => {
   log("error", "uncaughtException — encerrando processo", { error: err.message });
-  // Deixe um gerenciador de processos (pm2, Docker restart policy, systemd)
-  // reiniciar o servidor automaticamente após esse exit.
   process.exit(1);
 });
 

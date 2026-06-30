@@ -1,0 +1,59 @@
+/* sucesso.css — estilos da página de pagamento aprovado */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+  padding: 48px 36px;
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+}
+
+.icon {
+  width: 80px;
+  height: 80px;
+  background: #22c55e;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  animation: pop 0.4s ease-out;
+}
+
+.icon svg { width: 40px; height: 40px; stroke: #fff; }
+
+@keyframes pop {
+  0%   { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+h1 { color: #166534; font-size: 24px; margin-bottom: 12px; }
+p  { color: #4b5563; font-size: 16px; line-height: 1.5; margin-bottom: 28px; }
+
+.btn {
+  display: inline-block;
+  background: #16a34a;
+  color: #fff;
+  text-decoration: none;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: background 0.2s;
+}
+
+.btn:hover { background: #15803d; }

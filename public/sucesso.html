@@ -71,17 +71,8 @@
     <h1>Pagamento aprovado!</h1>
     <p>Recebemos sua confirmação do Stripe. Em breve você receberá um e-mail com os detalhes da sua compra.</p>
     <a href="/" class="btn">Voltar para o site</a>
-    <div class="order-id" id="sessionInfo"></div>
   </div>
 
-  <script>
-    // Captura o session_id que o Stripe envia na URL de sucesso
-    // Configure no Checkout: success_url: "https://seusite.com/sucesso.html?session_id={CHECKOUT_SESSION_ID}"
-    const params = new URLSearchParams(window.location.search);
-    const sessionId = params.get('session_id');
-    if (sessionId) {
-      document.getElementById('sessionInfo').textContent = 'ID da sessão: ' + sessionId;
-    }
-  </script>
+  <script src="./sucesso.js"></script>
 </body>
 </html>

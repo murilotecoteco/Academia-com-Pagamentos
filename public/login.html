@@ -3,107 +3,269 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Autenticação - Supabase</title>
+<title>Login – Academia Toledo</title>
+<meta name="description" content="Acesse sua conta na Academia Toledo e gerencie sua assinatura.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: system-ui, sans-serif;
-    background: #f5f4fb;
+  /* ── Estilos exclusivos da página de login ── */
+  .login-page {
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--dark, #0f0f13);
+  }
+
+  /* Mini header de volta */
+  .login-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .login-topbar .logo-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+  .login-topbar .logo-link svg {
+    width: 28px;
+    height: 28px;
+    fill: var(--yellow, #ffcd05);
+  }
+  .login-topbar .logo-link span {
+    color: var(--yellow, #ffcd05);
+  }
+  .login-topbar .back-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.5);
+    font-size: 14px;
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .login-topbar .back-link:hover { color: #fff; }
+  .login-topbar .back-link svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  /* Conteúdo central */
+  .login-wrap {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 40px 20px;
   }
+
   .auth-box {
-    background: #fff;
-    padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(0,0,0,.1);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    backdrop-filter: blur(12px);
+    padding: 44px 40px;
+    border-radius: 20px;
     width: 100%;
-    max-width: 380px;
+    max-width: 400px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5);
   }
-  h1 {
-    font-size: 22px;
-    margin-bottom: 24px;
-    text-align: center;
-    color: #222;
-  }
-  .form-group {
-    margin-bottom: 16px;
-  }
-  label {
-    display: block;
-    font-size: 13px;
-    color: #666;
+
+  .auth-box h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.5px;
     margin-bottom: 6px;
+    text-transform: uppercase;
   }
-  input {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+  .auth-box .auth-subtitle {
     font-size: 14px;
-    outline: none;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 32px;
+    font-family: 'DM Sans', sans-serif;
   }
-  input:focus { border-color: #5f4498; }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 8px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .form-group input {
+    width: 100%;
+    padding: 13px 16px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    font-size: 15px;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color .2s, background .2s;
+  }
+  .form-group input::placeholder { color: rgba(255,255,255,0.25); }
+  .form-group input:focus {
+    border-color: var(--yellow, #ffcd05);
+    background: rgba(255,255,255,0.09);
+  }
+
   .btn-row {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: 24px;
   }
-  button {
-    padding: 12px;
+
+  /* Botão primário — cadastrar */
+  #btn-register {
+    background: var(--yellow, #ffcd05);
+    color: #111;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
+    padding: 14px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: 0.5px;
     cursor: pointer;
-    transition: opacity .2s;
+    font-family: 'Barlow Condensed', sans-serif;
+    text-transform: uppercase;
+    transition: opacity .2s, transform .15s;
   }
-  button:hover { opacity: .85; }
-  #btn-register { background: #5f4498; color: #fff; }
-  #btn-login { background: #ffcd05; color: #000; }
-  #btn-logout { background: #eee; color: #333; }
-  #btn-getuser { background: #fff; color: #5f4498; border: 1px solid #5f4498; }
-  #status {
-    margin-top: 18px;
+  #btn-register:hover { opacity: .88; transform: translateY(-1px); }
+
+  /* Botão de login */
+  #btn-login {
+    background: var(--purple, #5f4498);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    text-transform: uppercase;
+    transition: opacity .2s, transform .15s;
+  }
+  #btn-login:hover { opacity: .88; transform: translateY(-1px); }
+
+  /* Botões secundários */
+  #btn-getuser,
+  #btn-logout {
+    background: transparent;
+    color: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 11px;
     font-size: 13px;
-    padding: 12px;
-    border-radius: 8px;
-    background: #f5f4fb;
-    color: #444;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: color .2s, border-color .2s;
+  }
+  #btn-getuser:hover,
+  #btn-logout:hover {
+    color: #fff;
+    border-color: rgba(255,255,255,0.3);
+  }
+
+  /* Divisor */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 4px;
+    color: rgba(255,255,255,0.2);
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+  }
+
+  /* Status */
+  #status {
+    margin-top: 20px;
+    font-size: 13px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.6);
     white-space: pre-wrap;
     word-break: break-word;
     min-height: 20px;
+    font-family: 'DM Sans', sans-serif;
+    display: none;
   }
-  #status.error { background: #fdeaea; color: #c0392b; }
-  #status.success { background: #e8f8ef; color: #1e8449; }
+  #status:not(:empty) { display: block; }
+  #status.error { background: rgba(220,38,38,0.15); color: #f87171; }
+  #status.success { background: rgba(34,197,94,0.15); color: #4ade80; }
 </style>
 </head>
-<body>
+<body class="login-page">
 
-<div class="auth-box">
-  <h1>Acesse sua conta</h1>
+<!-- Mini header -->
+<div class="login-topbar">
+  <a href="/" class="logo-link">
+    <svg viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29l-1.43-1.43z"/></svg>
+    ACADEMIA <span>TOLEDO</span>
+  </a>
+  <a href="/" class="back-link">
+    <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    Voltar ao site
+  </a>
+</div>
 
-  <div class="form-group">
-    <label for="email">E-mail</label>
-    <input type="email" id="email" placeholder="seu@email.com" />
+<!-- Formulário centralizado -->
+<div class="login-wrap">
+  <div class="auth-box">
+    <h1>Acesse sua<br>conta</h1>
+    <p class="auth-subtitle">Informe seu e-mail e senha para continuar</p>
+
+    <div class="form-group">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" placeholder="seu@email.com" autocomplete="email" />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Senha</label>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+
+    <div class="btn-row">
+      <button id="btn-login">Entrar</button>
+      <button id="btn-register">Criar conta gratuita</button>
+      <div class="divider">conta ativa</div>
+      <button id="btn-getuser">Ver usuário logado</button>
+      <button id="btn-logout">Sair</button>
+    </div>
+
+    <div id="status"></div>
   </div>
-
-  <div class="form-group">
-    <label for="password">Senha</label>
-    <input type="password" id="password" placeholder="••••••••" />
-  </div>
-
-  <div class="btn-row">
-    <button id="btn-register">Criar Conta</button>
-    <button id="btn-login">Login</button>
-    <button id="btn-getuser">Ver Usuário</button>
-    <button id="btn-logout">Logout</button>
-  </div>
-
-  <div id="status"></div>
 </div>
 
 <script type="module" src="./auth.js"></script>

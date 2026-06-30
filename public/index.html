@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Academia Toledo – PR</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta name="description" content="Academia Toledo – PR. A academia mais completa de Toledo com musculação, pilates, yoga, studio bike e spa. Planos a partir de R$80/mês. Agende sua aula experimental grátis!">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./style.css">
 <script src="script.js"></script>
@@ -69,7 +71,7 @@
       FALE CONOSCO
     </a>
   </div>
-  <button class="mobile-toggle" onclick="toggleMenu()">☰</button>
+  <button class="mobile-toggle" id="mobileToggle">☰</button>
 </header>
 
 <!-- HERO -->
@@ -170,8 +172,8 @@
         <div class="slide-label">Spa &amp; Relaxamento<small>Recuperação e bem-estar</small></div>
       </div>
     </div>
-    <button class="carousel-btn prev" onclick="moveCarousel(-1)">&#8249;</button>
-    <button class="carousel-btn next" onclick="moveCarousel(1)">&#8250;</button>
+    <button class="carousel-btn prev" id="carouselPrev">&#8249;</button>
+    <button class="carousel-btn next" id="carouselNext">&#8250;</button>
     <div class="carousel-dots" id="carouselDots"></div>
   </div>
 </section>
@@ -183,7 +185,7 @@
     <h2 class="section-title-lg">CONHEÇA NOSSA ESTRUTURA<br>COM MAIS DE <em style="color:var(--yellow);">1500M²</em></h2>
     <p class="section-desc">Cada metro quadrado foi pensado para maximizar seus resultados</p>
   </div>
-  <div class="video-container reveal" onclick="openMainVideo(this)">
+  <div class="video-container reveal" id="mainVideoContainer">
     <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&q=80" alt="Tour academia" />
     <div class="play-circle"></div>
   </div>
@@ -241,7 +243,7 @@
 <section class="plans-section" id="planos">
   <div class="plans-header">
     <div class="section-tag">Planos & Preços</div>
-    <h2 class="section-title-lg reveal">ESCOLHA O PLANO PERFEITO<br>PARA SEUS <em style="color:var(--yellow);">OBJETIVOS(esse site é apenas um modelo)"</em></h2>
+    <h2 class="section-title-lg reveal">ESCOLHA O PLANO PERFEITO<br>PARA SEUS <em style="color:var(--yellow);">OBJETIVOS</em></h2>
     <a href="#plansGrid" class="btn-primary reveal" style="margin-top:28px;">ASSINAR PLANO</a>
   </div>
 
@@ -261,9 +263,9 @@
         <li>Avaliação física inicial</li>
         <li>Ambiente climatizado</li>
       </ul>
-      <a href="https://buy.stripe.com/test_5kQdRa6y14x434FbqgaMU00" target="_blank" class="btn-plan">
+      <button class="btn-plan" data-plan-id="mensal" id="btn-plan-mensal">
         ASSINAR MENSAL
-      </a>
+      </button>
     </div>
 
     <div class="plan-card reveal">
@@ -281,9 +283,9 @@
         <li>Ambiente climatizado</li>
         <li>Desconto em relação ao mensal</li>
       </ul>
-      <a href="https://buy.stripe.com/test_fZu14o9Kd0gOeNnamcaMU01" target="_blank" class="btn-plan">
+      <button class="btn-plan" data-plan-id="trimestral" id="btn-plan-trimestral">
         ASSINAR TRIMESTRAL
-      </a>
+      </button>
     </div>
 
     <div class="plan-card featured reveal">
@@ -303,9 +305,9 @@
         <li>Maior desconto por mês</li>
         <li>Acompanhamento de evolução</li>
       </ul>
-      <a href="https://buy.stripe.com/test_4gM3cwbSlbZw20B2TKaMU02" target="_blank" class="btn-plan">
+      <button class="btn-plan" data-plan-id="semestral" id="btn-plan-semestral">
         ASSINAR SEMESTRAL
-      </a>
+      </button>
     </div>
 
     <div class="plan-card reveal">
@@ -324,9 +326,9 @@
         <li>Máximo desconto</li>
         <li>Acompanhamento contínuo</li>
       </ul>
-      <a href="https://buy.stripe.com/test_fZubJ23lPgfMgVvdyoaMU03" target="_blank" class="btn-plan">
+      <button class="btn-plan" data-plan-id="anual" id="btn-plan-anual">
         ASSINAR ANUAL
-      </a>
+      </button>
     </div>
 
   </div>
@@ -354,42 +356,42 @@
   </div>
   <div class="faq-list">
     <div class="faq-item reveal">
-      <button class="faq-question" onclick="toggleFaq(this)">
+      <button class="faq-question" data-faq-toggle>
         Preciso ter experiência para começar a treinar?
         <span class="faq-icon">+</span>
       </button>
       <div class="faq-answer"><p>Não! Nossa equipe é especializada em iniciantes e vai te acompanhar em cada exercício, ajustando o treino ao seu ritmo até você ganhar confiança e autonomia.</p></div>
     </div>
     <div class="faq-item reveal">
-      <button class="faq-question" onclick="toggleFaq(this)">
+      <button class="faq-question" data-faq-toggle>
         Como funciona a aula experimental grátis?
         <span class="faq-icon">+</span>
       </button>
       <div class="faq-answer"><p>É simples: você agenda pelo WhatsApp, escolhe o melhor horário e vem conhecer nossa estrutura, equipamentos e equipe sem nenhum compromisso.</p></div>
     </div>
     <div class="faq-item reveal">
-      <button class="faq-question" onclick="toggleFaq(this)">
+      <button class="faq-question" data-faq-toggle>
         Quais são os horários de funcionamento?
         <span class="faq-icon">+</span>
       </button>
       <div class="faq-answer"><p>Funcionamos de segunda a sexta das 05h às 24h, sábado das 08h às 18h e domingo das 08h às 12h.</p></div>
     </div>
     <div class="faq-item reveal">
-      <button class="faq-question" onclick="toggleFaq(this)">
+      <button class="faq-question" data-faq-toggle>
         Posso treinar mesmo com pouco tempo disponível?
         <span class="faq-icon">+</span>
       </button>
       <div class="faq-answer"><p>Sim! Montamos treinos personalizados que cabem na sua rotina, sejam sessões rápidas e intensas ou treinos mais longos, conforme sua disponibilidade.</p></div>
     </div>
     <div class="faq-item reveal">
-      <button class="faq-question" onclick="toggleFaq(this)">
+      <button class="faq-question" data-faq-toggle>
         Quais modalidades estão incluídas no plano?
         <span class="faq-icon">+</span>
       </button>
       <div class="faq-answer"><p>Todos os planos dão acesso à musculação, área de cardio e avaliação física inicial. Aulas como Pilates, Yoga e Studio Bike podem variar conforme o plano — fale com nossa equipe para saber mais.</p></div>
     </div>
     <div class="faq-item reveal">
-      <button class="faq-question" onclick="toggleFaq(this)">
+      <button class="faq-question" data-faq-toggle>
         Como faço para assinar um plano ou tirar dúvidas?
         <span class="faq-icon">+</span>
       </button>
@@ -625,7 +627,7 @@
   </div>
 
   <div class="footer-bottom">
-    <p>© 2025 Academia Toledo – PR. Todos os direitos reservados.</p>
+    <p>© <span id="footerYear">2026</span> Academia Toledo – PR. Todos os direitos reservados.</p>
     <div class="footer-bottom-links">
       <a href="#">Política de Privacidade</a>
       <a href="#">Termos de Uso</a>
@@ -638,5 +640,8 @@
 <a href="http://wa.me/5544998381478" class="wa-float" target="_blank">
   <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
+
+<!-- PAGAMENTO — integração com o backend via JWT -->
+<script type="module" src="./pagamento.js"></script>
 </body>
 </html>
