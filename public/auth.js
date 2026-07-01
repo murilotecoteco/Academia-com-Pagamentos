@@ -35,6 +35,31 @@ const btnLogout = document.getElementById("btn-logout");
 const MIN_PASSWORD_LENGTH = 6;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/* ============================================================
+   RETOMADA DE COMPRA — login.html?redirect=planos&plan=mensal
+   ============================================================ */
+
+// Nomes amigáveis dos planos, usados só para exibição de mensagens.
+const PLAN_LABELS = {
+  mensal: "Mensal",
+  trimestral: "Trimestral",
+  semestral: "Semestral",
+  anual: "Anual"
+};
+
+/**
+ * Lê os parâmetros ?redirect=planos&plan=X da URL atual.
+ * Retorna o planId pendente (ex: "mensal") se o usuário veio do clique
+ * em um plano e ainda não estava logado, ou null caso contrário.
+ */
+function getPendingPlan() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("redirect") !== "planos") return null;
+
+  const plan = params.get("plan");
+  return plan && PLAN_LABELS[plan] ? plan : null;
+}
+
 /**
  * Exibe uma mensagem de status para o usuário.
  * Se #status não existir no DOM, usa console.log/alert como fallback
@@ -129,6 +154,19 @@ async function registerUser() {
   }
 
   console.log("Cadastro:", data.user);
+
+  // Se o cadastro já vem com sessão ativa (confirmação de e-mail desativada
+  // no projeto Supabase) e o usuário veio de um clique em um plano,
+  // retoma a compra automaticamente em vez de só mostrar status.
+  if (data.session) {
+    const pendingPlan = getPendingPlan();
+    if (pendingPlan) {
+      setStatus(`Conta criada! Redirecionando para o pagamento do plano ${PLAN_LABELS[pendingPlan]}...`, "success");
+      await pagar(pendingPlan);
+      return;
+    }
+  }
+
   setStatus("Conta criada com sucesso!", "success");
 }
 
@@ -149,6 +187,17 @@ async function loginUser() {
   }
 
   console.log("Login:", data.user);
+
+  // Se o usuário veio do clique em um plano (redirecionado pra cá por
+  // pagar(), em auth.js), retoma a compra automaticamente assim que o
+  // login é confirmado — sem precisar voltar pro site e clicar de novo.
+  const pendingPlan = getPendingPlan();
+  if (pendingPlan) {
+    setStatus(`Login realizado! Redirecionando para o pagamento do plano ${PLAN_LABELS[pendingPlan]}...`, "success");
+    await pagar(pendingPlan);
+    return;
+  }
+
   setStatus("Login realizado!", "success");
 }
 
@@ -208,8 +257,9 @@ export async function pagar(planId, btnEl = null) {
   const session = sessionData?.session;
 
   if (!session?.access_token) {
-    // Usuário não logado — redireciona para a página de login.
-    // Salva o plano escolhido para retomar após o login (melhoria futura).
+    // Usuário não logado — redireciona para a página de login, levando o
+    // plano escolhido na URL. Ao logar/cadastrar com sucesso, login.html
+    // (via getPendingPlan() em auth.js) retoma esta compra automaticamente.
     window.location.href = `/login.html?redirect=planos&plan=${encodeURIComponent(planId)}`;
     return;
   }
@@ -283,3 +333,10 @@ btnRegister?.addEventListener("click", registerUser);
 btnLogin?.addEventListener("click", loginUser);
 btnGetUser?.addEventListener("click", showCurrentUser);
 btnLogout?.addEventListener("click", logoutUser);
+
+// Avisa o usuário, já ao carregar a página, por que ele caiu na tela de
+// login — caso tenha vindo de um clique em um plano (ver getPendingPlan).
+const pendingPlanOnLoad = getPendingPlan();
+if (pendingPlanOnLoad) {
+  setStatus(`Faça login ou crie uma conta para continuar a assinatura do plano ${PLAN_LABELS[pendingPlanOnLoad]}.`);
+}
