@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minha Conta – Academia Toledo</title>
+<meta name="description" content="Gerencie sua assinatura na Academia Toledo: troque o cartão, veja faturas e atualize seus dados.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+<style>
+  .conta-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--dark, #0f0f13);
+  }
+
+  .conta-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .conta-topbar .logo-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+  .conta-topbar .logo-link svg { width: 28px; height: 28px; fill: var(--yellow, #ffcd05); }
+  .conta-topbar .logo-link span { color: var(--yellow, #ffcd05); }
+  .conta-topbar .back-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.5);
+    font-size: 14px;
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .conta-topbar .back-link:hover { color: #fff; }
+  .conta-topbar .back-link svg { width: 16px; height: 16px; fill: currentColor; }
+
+  .conta-wrap {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 56px 20px;
+  }
+
+  .conta-box {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .conta-header { margin-bottom: 28px; }
+  .conta-header h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .conta-header p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.45);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .conta-header p span { color: var(--yellow, #ffcd05); }
+
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    backdrop-filter: blur(12px);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .hidden { display: none !important; }
+
+  /* Loading */
+  #card-loading { text-align: center; color: rgba(255,255,255,0.4); font-size: 14px; padding: 20px 0; }
+
+  /* Empty state */
+  #card-empty h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    color: #fff;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  #card-empty p { color: rgba(255,255,255,0.45); font-size: 14px; margin-bottom: 24px; }
+
+  /* Subscription card */
+  .sub-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .sub-row:last-of-type { border-bottom: none; }
+  .sub-row .label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+  .sub-row .value { font-size: 15px; color: #fff; font-weight: 500; }
+
+  .sub-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-active { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .badge-warning { background: rgba(234,179,8,0.15); color: #facc15; }
+  .badge-canceled { background: rgba(220,38,38,0.15); color: #f87171; }
+
+  #sub-cancel-notice {
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: rgba(220,38,38,0.1);
+    color: #f87171;
+    font-size: 13px;
+  }
+
+  .btn-yellow {
+    width: 100%;
+    background: var(--yellow, #ffcd05);
+    color: #111;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    text-transform: uppercase;
+    transition: opacity .2s, transform .15s;
+    margin-top: 22px;
+  }
+  .btn-yellow:hover { opacity: .88; transform: translateY(-1px); }
+  .btn-yellow:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+  .card-note {
+    margin-top: 14px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  #portal-status {
+    margin-top: 14px;
+    font-size: 13px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.6);
+    display: none;
+  }
+  #portal-status:not(:empty) { display: block; }
+  #portal-status.error { background: rgba(220,38,38,0.15); color: #f87171; }
+
+  .btn-logout-link {
+    display: block;
+    text-align: center;
+    margin-top: 24px;
+    background: transparent;
+    color: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 11px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: color .2s, border-color .2s;
+    width: 100%;
+  }
+  .btn-logout-link:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+</style>
+</head>
+<body class="conta-page">
+
+<div class="conta-topbar">
+  <a href="/" class="logo-link">
+    <svg viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29l-1.43-1.43z"/></svg>
+    ACADEMIA <span>TOLEDO</span>
+  </a>
+  <a href="/" class="back-link">
+    <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    Voltar ao site
+  </a>
+</div>
+
+<div class="conta-wrap">
+  <div class="conta-box">
+    <div class="conta-header">
+      <h1>Minha conta</h1>
+      <p>Logado como <span id="user-email">carregando...</span></p>
+    </div>
+
+    <div class="card">
+      <div id="card-loading">Carregando sua assinatura...</div>
+
+      <!-- Estado sem assinatura -->
+      <div id="card-empty" class="hidden">
+        <h2>Nenhuma assinatura ativa</h2>
+        <p>Você ainda não tem um plano contratado. Escolha um plano para começar a treinar.</p>
+        <a href="/#planos" class="btn-yellow" style="display:block; text-align:center; text-decoration:none;">VER PLANOS</a>
+      </div>
+
+      <!-- Estado com assinatura -->
+      <div id="card-subscription" class="hidden">
+        <div class="sub-row">
+          <span class="label">Plano</span>
+          <span class="value" id="sub-plan">—</span>
+        </div>
+        <div class="sub-row">
+          <span class="label">Status</span>
+          <span class="sub-badge" id="sub-status">—</span>
+        </div>
+        <div class="sub-row">
+          <span class="label" id="sub-period-label">Próxima cobrança</span>
+          <span class="value" id="sub-period-end">—</span>
+        </div>
+
+        <div id="sub-cancel-notice" class="hidden">
+          Sua assinatura foi cancelada e não será renovada.
+        </div>
+
+        <button id="btn-portal" class="btn-yellow">GERENCIAR ASSINATURA</button>
+        <p class="card-note">
+          No portal seguro do Stripe você pode trocar o cartão, ver e baixar
+          faturas, atualizar seus dados de cobrança e cancelar a assinatura
+          (o acesso permanece ativo até o fim do período já pago).
+        </p>
+        <div id="portal-status"></div>
+      </div>
+    </div>
+
+    <button id="btn-logout" class="btn-logout-link">Sair da conta</button>
+  </div>
+</div>
+
+<script type="module" src="./conta.js"></script>
+</body>
+</html>

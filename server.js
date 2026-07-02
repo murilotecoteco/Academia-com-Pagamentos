@@ -99,9 +99,23 @@ function addOneMonth(date) {
 async function getBillingPeriod(subscriptionId, eventTimestampSec) {
   try {
     const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+
+    // A partir das API versions mais recentes do Stripe, current_period_start
+    // e current_period_end saíram do objeto Subscription e passaram a viver
+    // dentro de cada item da assinatura (subscription.items.data[]).
+    // Buscamos primeiro no item (formato novo) e caímos para o campo antigo
+    // no Subscription (formato legado) só por segurança/retrocompatibilidade.
+    const item = subscription.items?.data?.[0];
+    const rawStart = item?.current_period_start ?? subscription.current_period_start;
+    const rawEnd = item?.current_period_end ?? subscription.current_period_end;
+
+    if (!rawStart || !rawEnd) {
+      throw new Error("current_period_start/end ausentes na Subscription retornada pelo Stripe");
+    }
+
     return {
-      periodStart: new Date(subscription.current_period_start * 1000),
-      periodEnd: new Date(subscription.current_period_end * 1000)
+      periodStart: new Date(rawStart * 1000),
+      periodEnd: new Date(rawEnd * 1000)
     };
   } catch (err) {
     log("warn", "Falha ao buscar período real da assinatura no Stripe, usando aproximação de 1 mês", {
@@ -136,6 +150,7 @@ async function activateSubscription({ user_id, plan, sessionId, subscriptionId, 
       current_period_start: periodStart.toISOString(),
       current_period_end: periodEnd.toISOString(),
       canceled_at: null, // limpa um cancelamento anterior, em caso de reassinatura
+      cancel_at_period_end: false, // nova assinatura/reassinatura nunca começa já agendada pra cancelar
       updated_at: new Date().toISOString()
     },
     { onConflict: "user_id" }
@@ -305,8 +320,32 @@ async function handleSubscriptionDeleted(subscription, eventId) {
  * Processa customer.subscription.updated: sincroniza status e período
  * da assinatura quando ela é alterada (ex.: trial → active, downgrade/upgrade).
  */
-async function handleSubscriptionUpdated(subscription, eventId) {
-  const subscriptionId = subscription.id;
+async function handleSubscriptionUpdated(subscriptionFromEvent, eventId) {
+  const subscriptionId = subscriptionFromEvent.id;
+
+  // IMPORTANTE: o Stripe NÃO garante que os webhooks cheguem na mesma ordem
+  // em que os eventos aconteceram. Quando o cliente cancela pelo Portal, o
+  // Stripe às vezes dispara mais de um customer.subscription.updated em
+  // sequência rápida (ex.: uma atualização interna + o cancelamento em si).
+  // Se confiássemos no snapshot que vem dentro do evento, um evento "antigo"
+  // entregue fora de ordem poderia sobrescrever um estado mais novo (ex.:
+  // reverter cancel_at_period_end de true para false).
+  //
+  // Por isso, em vez de usar subscriptionFromEvent diretamente, buscamos o
+  // estado ATUAL e real da assinatura direto na API do Stripe. Isso resolve
+  // o problema de ordem: não importa qual evento chegou primeiro, sempre
+  // gravamos o dado mais atualizado que existe.
+  let subscription;
+  try {
+    subscription = await stripe.subscriptions.retrieve(subscriptionId);
+  } catch (err) {
+    log("error", "Falha ao rebuscar assinatura atual no Stripe (customer.subscription.updated)", {
+      subscription_id: subscriptionId,
+      error: err.message
+    });
+    throw err;
+  }
+
   const customerId = subscription.customer ?? null;
   const user_id = subscription.metadata?.user_id || null;
   const status = subscription.status; // active, past_due, canceled, etc.
@@ -315,18 +354,33 @@ async function handleSubscriptionUpdated(subscription, eventId) {
     event_id: eventId,
     subscription_id: subscriptionId,
     status,
-    user_id
+    user_id,
+    cancel_at_period_end_raw: subscription.cancel_at_period_end,
+    cancel_at_raw: subscription.cancel_at
   });
 
-  const periodStart = subscription.current_period_start
-    ? new Date(subscription.current_period_start * 1000).toISOString()
-    : undefined;
-  const periodEnd = subscription.current_period_end
-    ? new Date(subscription.current_period_end * 1000).toISOString()
-    : undefined;
+  const item = subscription.items?.data?.[0];
+  const rawPeriodStart = item?.current_period_start ?? subscription.current_period_start;
+  const rawPeriodEnd = item?.current_period_end ?? subscription.current_period_end;
+
+  const periodStart = rawPeriodStart ? new Date(rawPeriodStart * 1000).toISOString() : undefined;
+  const periodEnd = rawPeriodEnd ? new Date(rawPeriodEnd * 1000).toISOString() : undefined;
+
+  // Quando o cliente cancela pelo Portal, o Stripe agenda o fim para o
+  // término do período já pago: status continua "active" até lá.
+  //
+  // IMPORTANTE: em assinaturas com billing_mode "flexible" (o padrão mais
+  // recente), o Stripe pode indicar esse agendamento através do campo
+  // cancel_at (timestamp futuro) em vez do booleano cancel_at_period_end —
+  // então checamos os dois. Guardamos essa flag pra avisar o usuário no
+  // site sem esperar o cancelamento efetivo (subscription.deleted).
+  const cancelAtTimestamp = subscription.cancel_at;
+  const hasFutureCancelAt = typeof cancelAtTimestamp === "number" && cancelAtTimestamp * 1000 > Date.now();
+  const cancelAtPeriodEnd = Boolean(subscription.cancel_at_period_end) || hasFutureCancelAt;
 
   const updatePayload = {
     status,
+    cancel_at_period_end: cancelAtPeriodEnd,
     updated_at: new Date().toISOString(),
     ...(periodStart && { current_period_start: periodStart }),
     ...(periodEnd && { current_period_end: periodEnd })
@@ -347,7 +401,7 @@ async function handleSubscriptionUpdated(subscription, eventId) {
     return;
   }
 
-  const { error } = await query;
+  const { data, error } = await query.select();
 
   if (error) {
     log("error", "Falha ao atualizar assinatura no Supabase", {
@@ -357,7 +411,21 @@ async function handleSubscriptionUpdated(subscription, eventId) {
     throw error;
   }
 
-  log("success", "Assinatura atualizada", { subscription_id: subscriptionId, status });
+  if (!data || data.length === 0) {
+    log("warn", "customer.subscription.updated: nenhuma linha correspondente encontrada — nada foi atualizado", {
+      subscription_id: subscriptionId,
+      customer_id: customerId,
+      user_id
+    });
+    return;
+  }
+
+  log("success", "Assinatura atualizada", {
+    subscription_id: subscriptionId,
+    status,
+    cancel_at_period_end: cancelAtPeriodEnd,
+    matched_rows: data.length
+  });
 }
 
 /**
@@ -635,6 +703,116 @@ app.post("/create-checkout-session", checkoutLimiter, async (req, res) => {
   } catch (error) {
     log("error", "Erro ao criar sessão de checkout no Stripe", { error: error.message });
     res.status(500).json({ error: "Não foi possível iniciar o pagamento." });
+  }
+});
+
+// ---------------------------------------------------------------
+// PORTAL DO CLIENTE (Stripe Billing Portal)
+//
+// Permite que o usuário logado gerencie a própria assinatura:
+// trocar cartão, ver faturas, atualizar dados e cancelar
+// (cancelamento fica agendado para o fim do período vigente,
+// conforme configurado no Dashboard do Stripe > Portal do cliente).
+// ---------------------------------------------------------------
+
+// Middleware simples de autenticação por JWT do Supabase, reaproveitado
+// pelas rotas de conta/assinatura abaixo.
+async function requireAuth(req, res, next) {
+  const authHeader = req.headers.authorization || "";
+  const token = authHeader.replace("Bearer ", "").trim();
+
+  if (!token) {
+    return res.status(401).json({ error: "Não autenticado. Token ausente." });
+  }
+
+  const { data: authData, error: authError } = await supabase.auth.getUser(token);
+
+  if (authError || !authData?.user) {
+    log("warn", "Token JWT inválido em rota autenticada", { error: authError?.message });
+    return res.status(401).json({ error: "Não autenticado. Token inválido ou expirado." });
+  }
+
+  req.user = authData.user;
+  next();
+}
+
+const portalLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Muitas requisições. Aguarde um momento e tente novamente." }
+});
+
+// Retorna os dados da assinatura do usuário logado, para exibir na
+// tela "Minha Conta" (plano, status, próxima cobrança/cancelamento).
+app.get("/minha-assinatura", requireAuth, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("subscriptions")
+      .select("plan, status, current_period_end, canceled_at, cancel_at_period_end, stripe_customer_id")
+      .eq("user_id", req.user.id)
+      .maybeSingle();
+
+    if (error) {
+      log("error", "Falha ao buscar assinatura no Supabase", { user_id: req.user.id, error: error.message });
+      return res.status(500).json({ error: "Não foi possível carregar sua assinatura." });
+    }
+
+    if (!data) {
+      return res.status(404).json({ error: "Nenhuma assinatura encontrada para este usuário." });
+    }
+
+    // Nunca expõe o stripe_customer_id ao frontend.
+    const { stripe_customer_id, ...safeData } = data;
+    res.json(safeData);
+  } catch (error) {
+    log("error", "Erro ao buscar assinatura", { user_id: req.user.id, error: error.message });
+    res.status(500).json({ error: "Não foi possível carregar sua assinatura." });
+  }
+});
+
+// Cria uma sessão do Portal do Cliente Stripe e devolve a URL para
+// o frontend redirecionar o usuário até lá.
+app.post("/create-portal-session", portalLimiter, requireAuth, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("subscriptions")
+      .select("stripe_customer_id")
+      .eq("user_id", req.user.id)
+      .maybeSingle();
+
+    if (error) {
+      log("error", "Falha ao buscar stripe_customer_id no Supabase", {
+        user_id: req.user.id,
+        error: error.message
+      });
+      return res.status(500).json({ error: "Não foi possível abrir o portal de assinatura." });
+    }
+
+    if (!data?.stripe_customer_id) {
+      return res.status(404).json({
+        error: "Nenhuma assinatura encontrada. Assine um plano antes de acessar o portal."
+      });
+    }
+
+    const portalSession = await stripe.billingPortal.sessions.create({
+      customer: data.stripe_customer_id,
+      return_url: `${BASE_URL}/minha-conta.html`
+    });
+
+    log("info", "Sessão do portal do cliente criada", {
+      user_id: req.user.id,
+      customer_id: data.stripe_customer_id
+    });
+
+    res.json({ url: portalSession.url });
+  } catch (error) {
+    log("error", "Erro ao criar sessão do portal do cliente", {
+      user_id: req.user.id,
+      error: error.message
+    });
+    res.status(500).json({ error: "Não foi possível abrir o portal de assinatura." });
   }
 });
 
