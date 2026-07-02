@@ -1,41 +1,28 @@
 # Academia com Pagamentos
 
-Sistema web para gerenciamento de academia com integração de pagamentos recorrentes utilizando Stripe, backend em Node.js/Express e armazenamento de dados no Supabase.
+Sistema web para gerenciamento de assinaturas de uma academia, desenvolvido com Node.js, Express, Supabase e Stripe. A aplicação implementa um fluxo completo de pagamentos recorrentes, autenticação de usuários e sincronização automática das assinaturas por meio de Webhooks.
 
-## Demonstração
+## Visão Geral
 
-**Aplicação online:**
+O projeto simula uma plataforma de academia onde usuários podem criar uma conta, contratar um plano mensal e ter o status da assinatura atualizado automaticamente após o processamento do pagamento pelo Stripe.
 
-https://academia-com-pagamentos.onrender.com
+A aplicação foi desenvolvida utilizando uma arquitetura cliente-servidor, separando responsabilidades entre interface, regras de negócio, integração com serviços externos e persistência de dados.
 
----
+## Principais Funcionalidades
 
-## Sobre o projeto
-
-Este projeto foi desenvolvido com o objetivo de simular uma plataforma moderna para academias, permitindo que usuários realizem a contratação de um plano mensal por meio do Stripe Checkout.
-
-Após a confirmação do pagamento, a aplicação recebe os eventos enviados pelo Stripe através de Webhooks e atualiza automaticamente o status da assinatura do usuário no Supabase.
-
-O sistema foi desenvolvido seguindo boas práticas de organização do backend, validação de dados, tratamento de erros e processamento idempotente dos eventos enviados pelo Stripe.
-
----
-
-## Funcionalidades
-
-- Assinatura mensal via Stripe Checkout
+- Cadastro e autenticação de usuários
+- Gerenciamento da conta do usuário
+- Contratação de plano mensal via Stripe Checkout
 - Processamento automático de pagamentos
 - Integração com Stripe Webhooks
-- Ativação automática da assinatura
-- Cancelamento automático da assinatura
-- Armazenamento de dados no Supabase
-- Validação de dados do usuário
-- Tratamento de erros
-- Backend REST utilizando Express
+- Ativação automática da assinatura após confirmação do pagamento
+- Cancelamento automático de assinaturas
+- Persistência de dados utilizando Supabase
+- Validação de dados de entrada
+- Tratamento centralizado de erros
 - Deploy em ambiente de produção
 
----
-
-## Tecnologias Utilizadas
+## Tecnologias
 
 ### Front-end
 
@@ -57,76 +44,73 @@ O sistema foi desenvolvido seguindo boas práticas de organização do backend, 
 - Stripe Checkout
 - Stripe Webhooks
 
-### Deploy
-
-- Render
-
-### Controle de Versão
+### Ferramentas
 
 - Git
 - GitHub
-
----
+- Render
 
 ## Arquitetura
 
-```text
-Frontend
-     │
-     ▼
-Express (Node.js)
-     │
-     ├────────► Stripe Checkout
-     │                │
-     │                ▼
-     │         Processamento do pagamento
-     │                │
-     │                ▼
-     │         Stripe Webhooks
-     │                │
-     ▼                │
-Supabase ◄────────────┘
+```
+Cliente (Browser)
+        │
+        ▼
+Frontend (HTML, CSS, JavaScript)
+        │
+        ▼
+Express API
+        │
+        ├──────────────► Stripe Checkout
+        │                     │
+        │                     ▼
+        │              Processamento do pagamento
+        │                     │
+        │                     ▼
+        │              Stripe Webhooks
+        │                     │
+        ▼                     │
+Supabase ◄────────────────────┘
 ```
 
----
+## Fluxo de Funcionamento
 
-## Fluxo da Aplicação
-
-1. O usuário acessa a plataforma.
-2. Seleciona o plano mensal.
-3. O backend cria uma sessão de pagamento no Stripe.
-4. O usuário realiza o pagamento.
+1. O usuário realiza login na plataforma.
+2. Seleciona um plano disponível.
+3. O backend cria uma sessão do Stripe Checkout.
+4. O usuário conclui o pagamento.
 5. O Stripe envia um Webhook para a aplicação.
-6. O backend valida a assinatura do evento.
-7. O pagamento é registrado no Supabase.
-8. A assinatura do usuário é ativada automaticamente.
-
----
+6. O backend valida a assinatura do evento recebido.
+7. O Supabase é atualizado automaticamente.
+8. A assinatura do usuário passa a ficar ativa.
 
 ## Estrutura do Projeto
 
-```text
+```
 Academia-com-Pagamentos
 │
 ├── public/
+│   ├── auth.js
+│   ├── conta.js
+│   ├── pagamento.js
+│   ├── script.js
+│   ├── supabase.js
 │   ├── index.html
 │   ├── login.html
+│   ├── minha-conta.html
 │   ├── sucesso.html
 │   ├── cancelado.html
 │   ├── style.css
-│   ├── script.js
-│   ├── auth.js
-│   └── supabase.js
+│   ├── sucesso.css
+│   └── cancelado.css
 │
 ├── server.js
 ├── supabaseClient.js
 ├── package.json
-├── .env
+├── .env.example
 ├── .gitignore
 └── README.md
 ```
-
----
 
 ## Variáveis de Ambiente
 
@@ -140,31 +124,29 @@ SUPABASE_SERVICE_KEY=
 BASE_URL=http://localhost:3000
 ```
 
----
-
 ## Instalação
 
-Clone o repositório:
+Clone o repositório.
 
 ```bash
 git clone https://github.com/murilotecoteco/Academia-com-Pagamentos.git
 ```
 
-Entre na pasta:
+Entre na pasta do projeto.
 
 ```bash
 cd Academia-com-Pagamentos
 ```
 
-Instale as dependências:
+Instale as dependências.
 
 ```bash
 npm install
 ```
 
-Configure o arquivo `.env`.
+Configure as variáveis de ambiente.
 
-Inicie o servidor:
+Inicie a aplicação.
 
 ```bash
 npm start
@@ -172,61 +154,58 @@ npm start
 
 A aplicação estará disponível em:
 
-```text
+```
 http://localhost:3000
 ```
 
----
-
 ## Configuração do Stripe
 
-Configure um endpoint de Webhook apontando para:
+Configure um endpoint para recebimento dos Webhooks:
 
-```text
+```
 /webhook
 ```
 
-Eventos utilizados:
+Eventos processados:
 
-- `checkout.session.completed`
-- `customer.subscription.deleted`
-
----
+- checkout.session.completed
+- customer.subscription.deleted
 
 ## Deploy
-
-Hospedagem realizada no Render.
 
 Produção:
 
 https://academia-com-pagamentos.onrender.com
 
----
-
 ## Segurança
 
-O projeto utiliza diversas práticas para garantir maior confiabilidade:
+O projeto implementa diversas práticas para garantir confiabilidade durante o processamento das assinaturas.
 
 - Validação das variáveis de ambiente
-- Verificação da assinatura dos Webhooks do Stripe
-- Processamento idempotente dos eventos
-- Validação dos dados enviados pelo cliente
+- Verificação criptográfica dos Webhooks do Stripe
+- Processamento idempotente de eventos
+- Validação de dados enviados pelo cliente
 - Tratamento centralizado de erros
-- Uso de variáveis de ambiente para informações sensíveis
-- Arquivo `.env` ignorado pelo Git
+- Isolamento de informações sensíveis por meio de variáveis de ambiente
+- Exclusão do arquivo `.env` do controle de versão
 
----
+## Possíveis Evoluções
 
-## Objetivo
-
-Este projeto foi desenvolvido para fins de estudo e portfólio, demonstrando a implementação de um fluxo completo de pagamentos recorrentes utilizando Stripe, integração com banco de dados em nuvem por meio do Supabase e deploy de uma aplicação Node.js em ambiente de produção.
-
----
+- Painel administrativo
+- Histórico de pagamentos
+- Recuperação de senha
+- Planos com diferentes níveis de assinatura
+- Área do aluno
+- Dashboard financeiro
+- Testes automatizados
 
 ## Autor
 
-**Murilo**
+Murilo de Souza Candido
 
-GitHub:
+GitHub: https://github.com/murilotecoteco
+LinkedIn: https://www.linkedin.com/in/murilotecoteco
 
-https://github.com/murilotecoteco
+## Observação
+
+O projeto utiliza os planos gratuitos do Render e do Supabase para fins de demonstração. Em períodos de inatividade, esses serviços podem entrar em modo de suspensão automática, ocasionando um breve tempo de inicialização ou indisponibilidade temporária.
