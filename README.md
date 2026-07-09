@@ -57,6 +57,7 @@
 * Environment Variables
 * Deployment
 * Security
+* Known Limitations
 * Roadmap
 * License
 
@@ -196,17 +197,8 @@ Academia-com-Pagamentos/
 
 ```bash
 git clone https://github.com/murilotecoteco/Academia-com-Pagamentos.git
-```
-
-```bash
 cd Academia-com-Pagamentos
-```
-
-```bash
 npm install
-```
-
-```bash
 npm start
 ```
 
@@ -257,6 +249,13 @@ The project includes several security practices:
 * Centralized error handling
 * Sensitive credentials stored as environment variables
 * `.env` excluded from version control
+
+---
+
+# Known Limitations
+
+* This project uses Supabase's free tier, which automatically pauses the database after a period of inactivity. If the live demo appears unresponsive, the database may need a few seconds to resume, or manual reactivation may be required via the Supabase dashboard.
+* In a production environment, this would be mitigated by upgrading to a paid tier or implementing a scheduled ping to keep the instance active.
 
 ---
 
