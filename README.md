@@ -1,93 +1,171 @@
 # Academia com Pagamentos
 
-Sistema web para gerenciamento de assinaturas de uma academia, desenvolvido com Node.js, Express, Supabase e Stripe. A aplicação implementa um fluxo completo de pagamentos recorrentes, autenticação de usuários e sincronização automática das assinaturas por meio de Webhooks.
+<p align="center">
+  <img src=".github/banner.png" alt="Academia com Pagamentos Banner">
+</p>
 
-## Visão Geral
+<p align="center">
+  Web application for managing gym memberships with recurring payments using Stripe and Supabase.
+</p>
 
-O projeto simula uma plataforma de academia onde usuários podem criar uma conta, contratar um plano mensal e ter o status da assinatura atualizado automaticamente após o processamento do pagamento pelo Stripe.
+<p align="center">
 
-A aplicação foi desenvolvida utilizando uma arquitetura cliente-servidor, separando responsabilidades entre interface, regras de negócio, integração com serviços externos e persistência de dados.
+![Status](https://img.shields.io/badge/status-completed-brightgreen)
+![License](https://img.shields.io/badge/license-none-lightgrey)
 
-## Principais Funcionalidades
+</p>
 
-- Cadastro e autenticação de usuários
-- Gerenciamento da conta do usuário
-- Contratação de plano mensal via Stripe Checkout
-- Processamento automático de pagamentos
-- Integração com Stripe Webhooks
-- Ativação automática da assinatura após confirmação do pagamento
-- Cancelamento automático de assinaturas
-- Persistência de dados utilizando Supabase
-- Validação de dados de entrada
-- Tratamento centralizado de erros
-- Deploy em ambiente de produção
+<p align="center">
 
-## Tecnologias
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge\&logo=html5\&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge\&logo=css3\&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge\&logo=javascript\&logoColor=black)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge\&logo=nodedotjs\&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge\&logo=express\&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge\&logo=supabase\&logoColor=white)
+![Stripe](https://img.shields.io/badge/Stripe-635BFF?style=for-the-badge\&logo=stripe\&logoColor=white)
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge\&logo=git\&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge\&logo=github\&logoColor=white)
+![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge\&logo=render\&logoColor=white)
 
-### Front-end
+</p>
 
-- HTML5
-- CSS3
-- JavaScript
+<p align="center">
 
-### Back-end
+<a href="https://academia-com-pagamentos.onrender.com">
+<img src="https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge">
+</a>
 
-- Node.js
-- Express.js
+<a href="https://github.com/murilotecoteco/Academia-com-Pagamentos">
+<img src="https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge">
+</a>
 
-### Banco de Dados
+</p>
 
-- Supabase
+---
 
-### Pagamentos
+# Table of Contents
 
-- Stripe Checkout
-- Stripe Webhooks
+* About
+* Why this project
+* Screenshots
+* Features
+* Technology Stack
+* Architecture
+* Project Structure
+* Getting Started
+* Environment Variables
+* Deployment
+* Security
+* Roadmap
+* License
 
-### Ferramentas
+---
 
-- Git
-- GitHub
-- Render
+# About
 
-## Arquitetura
+Academia com Pagamentos is a full-stack web application that simulates a gym membership platform with recurring subscriptions.
 
-```
-Cliente (Browser)
-        │
-        ▼
-Frontend (HTML, CSS, JavaScript)
-        │
-        ▼
+Users can create an account, subscribe to a monthly plan through Stripe Checkout, and have their membership status automatically synchronized using Stripe Webhooks and Supabase.
+
+The project demonstrates backend development, payment processing, authentication, database integration and deployment in a production environment.
+
+---
+
+# Why this project
+
+This project was built to practice and demonstrate:
+
+* REST API development with Express
+* User authentication
+* Stripe Checkout integration
+* Stripe Webhooks
+* Secure payment processing
+* Cloud database management with Supabase
+* Environment variable management
+* Production deployment
+
+---
+
+# Screenshots
+
+## Home
+
+![Home](.github/screenshots/home.png)
+
+## Account
+
+![Account](.github/screenshots/account.png)
+
+## Checkout
+
+![Checkout](.github/screenshots/checkout.png)
+
+---
+
+# Features
+
+* ✅ User registration and authentication
+* ✅ User account management
+* ✅ Stripe Checkout integration
+* ✅ Stripe Webhooks
+* ✅ Automatic subscription activation
+* ✅ Automatic subscription cancellation
+* ✅ Supabase database integration
+* ✅ Input validation
+* ✅ Centralized error handling
+* ✅ Production deployment
+* ⏳ Admin dashboard
+* ⏳ Payment history
+* ⏳ Password recovery
+
+---
+
+# Technology Stack
+
+| Layer           | Technology                       |
+| --------------- | -------------------------------- |
+| Frontend        | HTML5, CSS3, JavaScript          |
+| Backend         | Node.js, Express.js              |
+| Database        | Supabase (PostgreSQL)            |
+| Payments        | Stripe Checkout, Stripe Webhooks |
+| Deployment      | Render                           |
+| Version Control | Git & GitHub                     |
+
+---
+
+# Architecture
+
+```text
+Client Browser
+      │
+      ▼
+Frontend
+(HTML, CSS, JavaScript)
+      │
+      ▼
 Express API
-        │
-        ├──────────────► Stripe Checkout
-        │                     │
-        │                     ▼
-        │              Processamento do pagamento
-        │                     │
-        │                     ▼
-        │              Stripe Webhooks
-        │                     │
-        ▼                     │
-Supabase ◄────────────────────┘
+      │
+ ┌────┴───────────────┐
+ │                    │
+ ▼                    ▼
+Stripe Checkout   Supabase Database
+      │                    ▲
+      ▼                    │
+Payment Processing          │
+      │                    │
+      ▼                    │
+Stripe Webhooks─────────────┘
 ```
 
-## Fluxo de Funcionamento
+The application follows a client-server architecture. The frontend communicates with an Express API responsible for authentication, payment processing and communication with Stripe. Subscription data is stored and synchronized in Supabase after successful webhook validation.
 
-1. O usuário realiza login na plataforma.
-2. Seleciona um plano disponível.
-3. O backend cria uma sessão do Stripe Checkout.
-4. O usuário conclui o pagamento.
-5. O Stripe envia um Webhook para a aplicação.
-6. O backend valida a assinatura do evento recebido.
-7. O Supabase é atualizado automaticamente.
-8. A assinatura do usuário passa a ficar ativa.
+---
 
-## Estrutura do Projeto
+# Project Structure
 
-```
-Academia-com-Pagamentos
+```text
+Academia-com-Pagamentos/
 │
 ├── public/
 │   ├── auth.js
@@ -100,9 +178,7 @@ Academia-com-Pagamentos
 │   ├── minha-conta.html
 │   ├── sucesso.html
 │   ├── cancelado.html
-│   ├── style.css
-│   ├── sucesso.css
-│   └── cancelado.css
+│   └── styles/
 │
 ├── server.js
 ├── supabaseClient.js
@@ -112,9 +188,45 @@ Academia-com-Pagamentos
 └── README.md
 ```
 
-## Variáveis de Ambiente
+---
 
-Crie um arquivo `.env` na raiz do projeto.
+# Getting Started
+
+## Prerequisites
+
+* Node.js 18+
+* Supabase project
+* Stripe account
+
+## Installation
+
+```bash
+git clone https://github.com/murilotecoteco/Academia-com-Pagamentos.git
+```
+
+```bash
+cd Academia-com-Pagamentos
+```
+
+```bash
+npm install
+```
+
+```bash
+npm start
+```
+
+The application will be available at:
+
+```text
+http://localhost:3000
+```
+
+---
+
+# Environment Variables
+
+Create a `.env` file in the project root.
 
 ```env
 STRIPE_SECRET_KEY=
@@ -124,88 +236,52 @@ SUPABASE_SERVICE_KEY=
 BASE_URL=http://localhost:3000
 ```
 
-## Instalação
+---
 
-Clone o repositório.
+# Deployment
 
-```bash
-git clone https://github.com/murilotecoteco/Academia-com-Pagamentos.git
-```
+The application is deployed on Render.
 
-Entre na pasta do projeto.
+Every deployment uses the configured environment variables for Stripe and Supabase.
 
-```bash
-cd Academia-com-Pagamentos
-```
+Production URL:
 
-Instale as dependências.
-
-```bash
-npm install
-```
-
-Configure as variáveis de ambiente.
-
-Inicie a aplicação.
-
-```bash
-npm start
-```
-
-A aplicação estará disponível em:
-
-```
-http://localhost:3000
-```
-
-## Configuração do Stripe
-
-Configure um endpoint para recebimento dos Webhooks:
-
-```
-/webhook
-```
-
-Eventos processados:
-
-- checkout.session.completed
-- customer.subscription.deleted
-
-## Deploy
-
-Produção:
-
+```text
 https://academia-com-pagamentos.onrender.com
+```
 
-## Segurança
+---
 
-O projeto implementa diversas práticas para garantir confiabilidade durante o processamento das assinaturas.
+# Security
 
-- Validação das variáveis de ambiente
-- Verificação criptográfica dos Webhooks do Stripe
-- Processamento idempotente de eventos
-- Validação de dados enviados pelo cliente
-- Tratamento centralizado de erros
-- Isolamento de informações sensíveis por meio de variáveis de ambiente
-- Exclusão do arquivo `.env` do controle de versão
+The project includes several security practices:
 
-## Possíveis Evoluções
+* Validation of environment variables
+* Stripe webhook signature verification
+* Idempotent webhook processing
+* Server-side payment validation
+* Centralized error handling
+* Sensitive credentials stored as environment variables
+* `.env` excluded from version control
 
-- Painel administrativo
-- Histórico de pagamentos
-- Recuperação de senha
-- Planos com diferentes níveis de assinatura
-- Área do aluno
-- Dashboard financeiro
-- Testes automatizados
+---
 
-## Autor
+# Roadmap
 
-Murilo de Souza Candido
+* [x] User authentication
+* [x] Stripe Checkout
+* [x] Stripe Webhooks
+* [x] Subscription synchronization
+* [x] Production deployment
+* [ ] Admin dashboard
+* [ ] Payment history
+* [ ] Password recovery
+* [ ] Automated tests
 
-GitHub: https://github.com/murilotecoteco
-LinkedIn: https://www.linkedin.com/in/murilotecoteco
+---
 
-## Observação
+# License
 
-O projeto utiliza os planos gratuitos do Render e do Supabase para fins de demonstração. Em períodos de inatividade, esses serviços podem entrar em modo de suspensão automática, ocasionando um breve tempo de inicialização ou indisponibilidade temporária.
+This project was developed for educational purposes.
+
+No license has been applied.
