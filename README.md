@@ -1,8 +1,6 @@
 # Academia com Pagamentos
 
-<p align="center">
-  <img src=".github/banner.png" alt="Academia com Pagamentos Banner">
-</p>
+
 
 <p align="center">
   Web application for managing gym memberships with recurring payments using Stripe and Supabase.
