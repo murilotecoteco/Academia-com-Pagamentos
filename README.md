@@ -89,15 +89,9 @@ This project was built to practice and demonstrate:
 
 ## Home
 
-![Home](.github/screenshots/home.png)
-
-## Account
-
-![Account](.github/screenshots/account.png)
-
-## Checkout
-
-![Checkout](.github/screenshots/checkout.png)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/04f53cd0-359e-4431-a6d5-3d3d1c62b14f" alt="Academia com Pagamentos">
+</p>
 
 ---
 
