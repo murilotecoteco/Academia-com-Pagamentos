@@ -27,6 +27,12 @@
 </p>
 
 <p align="center">
+  <b>Demo video:</b>
+</p>
+
+https://github.com/user-attachments/assets/4ce10eb5-1856-4c1f-9277-5679358940be
+
+<p align="center">
   <b>Click the buttons below to open the project:</b>
 </p>
 
